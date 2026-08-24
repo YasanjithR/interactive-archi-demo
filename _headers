@@ -1,0 +1,9 @@
+# Stems and renders never change once published — cache them hard.
+/content/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/src/*
+  Cache-Control: public, max-age=3600
+
+/*
+  Cache-Control: public, max-age=0, must-revalidate

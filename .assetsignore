@@ -1,0 +1,24 @@
+# Workers static assets uploads the whole assets directory, which here is the
+# repo root — including anything the build step creates. Without this, `npx
+# wrangler deploy` installs wrangler into ./node_modules and then tries to
+# upload its own 144 MB workerd binary, which exceeds the 25 MiB asset limit.
+node_modules
+.git
+.gitignore
+.assetsignore
+wrangler.jsonc
+package.json
+package-lock.json
+bun.lockb
+.DS_Store
+
+# consumed as config, not served as files
+_headers
+
+# not needed at runtime
+_to_delete
+tools
+test
+serve.sh
+README.md
+content/panel-01/source

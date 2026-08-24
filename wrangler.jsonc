@@ -1,0 +1,11 @@
+{
+  // Committed so the build uses these settings instead of regenerating them
+  // on every deploy. Assets directory is the repo root; .assetsignore keeps
+  // node_modules and the non-servable files out of the upload.
+  "name": "interactive-archi-demo",
+  "compatibility_date": "2026-08-20",
+  "assets": {
+    "directory": ".",
+    "not_found_handling": "404-page"
+  }
+}
