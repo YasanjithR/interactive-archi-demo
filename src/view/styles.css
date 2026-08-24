@@ -1,0 +1,156 @@
+/* Stem Stage — Common Ground.
+   Light presentation: the renders are white and pale concrete, so the chrome
+   is dark-on-light and sits on solid panels rather than relying on a scrim.
+   No web fonts — the demo must run with no network. */
+:root{
+  --ground:#CFCBC5;        /* concrete — the ground the drawings sit on */
+  --panel:#F7F6F4;
+  --panel-2:#EAE7E2;
+  --ink:#16181B;
+  --ink-2:#4A4E55;
+  --muted:#7C7972;
+  --line:#BEB9B1;
+  --focus:#B8480A;         /* the diagram orange, darkened to work as text */
+  --focus-soft:#F0DCCB;
+  --recess:#8A8279;
+  --tau:300ms;
+
+  --f-ui:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --f-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden;background:var(--ground);color:var(--ink);
+  font-family:var(--f-ui);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.fallback{padding:2rem;font-family:var(--f-mono)}
+
+/* ---------- stage ---------- */
+.stage{position:fixed;inset:0;background:var(--ground)}
+.stage img{position:absolute;inset:0;width:100%;height:100%;
+  object-fit:contain;                 /* never crop a one-point perspective */
+  opacity:0;transition:opacity var(--tau) ease}
+.stage img[data-active]{opacity:1}
+
+/* ---------- gate ---------- */
+.gate{position:fixed;inset:0;display:grid;place-items:center;text-align:center;
+  background:var(--panel);z-index:40;transition:opacity 600ms ease}
+.gate[hidden]{display:none}
+.gate.leaving{opacity:0;pointer-events:none}
+.gate .inner{max-width:36rem;padding:2rem}
+.gate .kicker{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--focus);margin-bottom:1.5rem}
+.gate h1{font-size:clamp(2.4rem,7vw,3.8rem);line-height:1.02;letter-spacing:-.03em;
+  margin:0 0 1.1rem;font-weight:600}
+.gate p{color:var(--ink-2);line-height:1.6;margin:0 0 2.25rem;font-size:1.05rem}
+.enter{border:1px solid var(--focus);color:var(--focus);padding:.85rem 2.4rem;border-radius:2px;
+  font-family:var(--f-mono);font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;
+  transition:background 200ms,color 200ms}
+.enter:hover{background:var(--focus);color:var(--panel)}
+.enter[disabled]{opacity:.55;cursor:progress;border-color:var(--muted);color:var(--muted);background:none}
+.bar{height:2px;background:var(--line);margin-top:1.75rem;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--focus);transition:width 180ms linear}
+.gate .hint{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;color:var(--muted);margin-top:1.25rem}
+.gate .err{color:#8C2626;font-family:var(--f-mono);font-size:.75rem;margin-top:1rem}
+
+/* ---------- shared chrome panel ---------- */
+.prof,.hud,.controls button,.caption{
+  background:var(--panel);border:1px solid var(--line);border-radius:3px;
+  box-shadow:0 1px 2px rgba(0,0,0,.05),0 10px 30px -22px rgba(0,0,0,.45);
+}
+
+/* ---------- caption ---------- */
+.caption{position:fixed;left:clamp(1rem,3vw,2.25rem);bottom:clamp(1rem,3vw,2.25rem);
+  max-width:27rem;z-index:10;padding:1rem 1.15rem}
+.caption .num{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.18em;color:var(--focus);
+  margin-bottom:.4rem;display:block}
+.caption h2{font-size:clamp(1.35rem,2.6vw,1.8rem);line-height:1.12;letter-spacing:-.02em;
+  margin:0 0 .4rem;font-weight:600;text-wrap:balance}
+.caption .stem{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;color:var(--muted);margin:0}
+.caption .stem b{color:var(--focus);font-weight:500}
+
+/* ---------- meter + index ---------- */
+.hud{position:fixed;top:clamp(1rem,3vw,2.25rem);right:clamp(1rem,3vw,2.25rem);z-index:10;
+  width:14rem;display:flex;flex-direction:column;gap:.9rem;padding:.95rem .9rem}
+.meter{display:flex;flex-direction:column;gap:.38rem}
+.meter .row{display:grid;grid-template-columns:4.3rem 1fr;align-items:center;gap:.55rem}
+.meter .nm{font-family:var(--f-mono);font-size:.62rem;letter-spacing:.06em;color:var(--muted);
+  text-transform:uppercase;transition:color var(--tau)}
+.meter .row[data-front] .nm{color:var(--focus)}
+.meter .track{height:.4rem;background:var(--panel-2);border-radius:1px;overflow:hidden}
+.meter .fill{height:100%;width:0;background:var(--recess);transition:width 90ms linear,background var(--tau)}
+.meter .row[data-front] .fill{background:var(--focus)}
+
+.index{border-top:1px solid var(--line);padding-top:.8rem;display:flex;flex-direction:column;gap:.05rem}
+.index button{display:grid;grid-template-columns:1.5rem 1fr;gap:.4rem;text-align:left;padding:.32rem .3rem;
+  font-family:var(--f-mono);font-size:.67rem;line-height:1.35;color:var(--ink-2);border-radius:2px;
+  transition:color 150ms,background 150ms}
+.index button:hover{background:var(--panel-2)}
+.index button[aria-current=true]{color:var(--focus);background:var(--focus-soft)}
+.index .i{color:var(--muted)}
+.index button[aria-current=true] .i{color:var(--focus)}
+
+/* ---------- controls ---------- */
+.controls{position:fixed;right:clamp(1rem,3vw,2.25rem);bottom:clamp(1rem,3vw,2.25rem);z-index:10;
+  display:flex;gap:.45rem;align-items:center}
+.controls button{padding:.6rem 1.05rem;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-2);transition:border-color 150ms,color 150ms}
+.controls button:hover:not([disabled]){border-color:var(--focus);color:var(--focus)}
+.controls button[disabled]{opacity:.4;cursor:default}
+.controls .read{border-color:var(--focus);color:var(--focus)}
+.controls .icon{padding:.5rem;width:2.25rem;height:2.25rem;display:grid;place-items:center}
+.controls .icon svg{width:1rem;height:1rem;fill:currentColor;display:block}
+.controls .icon[aria-pressed=true]{border-color:var(--focus);color:var(--focus);background:var(--focus-soft)}
+
+/* paused: freeze the meter visually and say so, quietly */
+body[data-paused=true] .meter{opacity:.45}
+body[data-paused=true] .meter .fill{transition:none}
+body[data-paused=true] .caption::after{
+  content:"Sound paused";display:block;margin-top:.55rem;
+  font-family:var(--f-mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--focus)}
+
+/* ---------- profile switch ---------- */
+.prof{position:fixed;left:clamp(1rem,3vw,2.25rem);top:clamp(1rem,3vw,2.25rem);z-index:10;
+  display:flex;overflow:hidden;padding:0}
+.prof button{padding:.44rem .8rem;font-family:var(--f-mono);font-size:.62rem;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted);border-right:1px solid var(--line)}
+.prof button:last-child{border-right:0}
+.prof button[aria-pressed=true]{color:var(--focus);background:var(--focus-soft)}
+
+/* ---------- reader ---------- */
+.reader{position:fixed;inset-block:0;inset-inline-end:0;inline-size:min(36rem,94vw);z-index:30;
+  background:var(--panel);border-left:1px solid var(--line);padding:clamp(2rem,5vw,3.25rem);
+  overflow-y:auto;transform:translateX(100%);
+  box-shadow:-24px 0 60px -40px rgba(0,0,0,.5);
+  transition:transform var(--tau) cubic-bezier(.22,.61,.36,1)}
+.reader[data-open=true]{transform:translateX(0)}
+.reader h3{font-size:1.65rem;line-height:1.14;letter-spacing:-.02em;margin:0 0 1.25rem;font-weight:600}
+.reader .meta{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.12em;color:var(--focus);
+  text-transform:uppercase;margin:0 0 .5rem}
+.reader p{color:var(--ink-2);line-height:1.72;margin:0 0 1.05rem;font-size:1.02rem}
+.reader .close{position:absolute;top:1rem;right:1.1rem;font-family:var(--f-mono);font-size:.66rem;
+  letter-spacing:.08em;color:var(--muted);padding:.4rem .55rem}
+.reader .close:hover{color:var(--focus)}
+.reader .credit{margin-top:2.25rem;padding-top:1.15rem;border-top:1px solid var(--line);
+  font-family:var(--f-mono);font-size:.64rem;line-height:1.8;color:var(--muted)}
+
+/* the stage shifts so the render stays visible beside the text, not behind it */
+.stage{transition:transform var(--tau) cubic-bezier(.22,.61,.36,1)}
+body[data-reader=true] .stage{transform:translateX(-16%) scale(.86)}
+.caption,.hud,.prof{transition:opacity var(--tau)}
+body[data-reader=true] .caption,
+body[data-reader=true] .hud,
+body[data-reader=true] .prof{opacity:.2}
+
+.notice{position:fixed;left:50%;top:1.1rem;transform:translateX(-50%);z-index:35;
+  font-family:var(--f-mono);font-size:.66rem;letter-spacing:.05em;color:#8C2626;
+  border:1px solid #D8B4B0;background:#F7EDEC;padding:.5rem .9rem;border-radius:2px}
+
+@media (prefers-reduced-motion:reduce){*{transition-duration:1ms !important}}
+@media (max-width:860px){
+  .hud{display:none}
+  .caption{max-width:none;right:clamp(1rem,3vw,2.25rem);bottom:5rem}
+  .controls{left:clamp(1rem,3vw,2.25rem);justify-content:space-between}
+  body[data-reader=true] .stage{transform:none}
+}

@@ -1,0 +1,17 @@
+{
+  "name": "resonance-field",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Stem Stage — a stepped mixing desk for an architectural panel",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "start":  "node tools/serve.mjs",
+    "dev":    "node tools/serve.mjs",
+    "test":   "node --test 'test/**/*.mjs'",
+    "assets": "bash tools/prepare.sh placeholder",
+    "check":  "npm test && node -e \"JSON.parse(require('fs').readFileSync('content/panel-01/panel.json'));console.log('manifest ok')\""
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

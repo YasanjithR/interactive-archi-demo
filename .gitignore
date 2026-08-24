@@ -1,0 +1,12 @@
+_to_delete/
+.DS_Store
+node_modules/
+*.wav
+
+# Intermediates from tools/prepare.sh live in /tmp, not here.
+
+# IMPORTANT — if this repo is ever public, do NOT commit stems separated from
+# the real M83 recording. Academic use of the track in a demo is one thing;
+# publishing the separated audio is distributing the recording. Either keep the
+# repo private, or uncomment the next line before adding the real stems.
+# content/panel-01/stems/

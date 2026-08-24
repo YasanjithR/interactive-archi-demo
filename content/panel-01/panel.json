@@ -1,0 +1,60 @@
+{
+  "id": "panel-01-common-ground",
+  "title": "Common Ground",
+  "kicker": "M83 · Solitude — translated into a public interior",
+  "subtitle": "One song, four elements, four architectural moves. Step through and hear which part of the score produced what you are looking at.",
+
+  "credit": {
+    "track": "Solitude",
+    "artist": "M83",
+    "note": "Used for academic analysis in a non-commercial university project. Stems are placeholders pending separation of the source recording."
+  },
+
+  "audio": {
+    "loop": true,
+    "tau": 0.3,
+    "channels": [
+      { "id": "chords",  "label": "Chords",  "src": "stems/chords.mp3",  "trim": 1.00 },
+      { "id": "melody",  "label": "Melody",  "src": "stems/melody.mp3",  "trim": 0.85 },
+      { "id": "reverb",  "label": "Reverb",  "src": "stems/reverb.mp3",  "trim": 1.15 },
+      { "id": "vocals",  "label": "Vocals",  "src": "stems/vocals.mp3",  "trim": 0.90 }
+    ]
+  },
+
+  "hero": {
+    "image": "images/04-mirrored-ceiling.jpeg",
+    "label": "Common Ground",
+    "body": "As you enter the building's public entrance and common ground, the space translates the emotional atmosphere of M83's Solitude into a collective urban experience. The intention was to make the atmosphere of this space speak out a strong statement — the melancholy of fast fashion and its environmental and social impacts.\n\nRepeated structural walls establish the rhythm of the sustained chords, while the monumental volume expresses the song's reverberation and emotional depth. Layered reflections above allow individuals to perceive themselves within the movement of the crowd, creating moments of personal contemplation within a shared civic space.\n\nFour moves, four parts of the score. Step forward to take them one at a time."
+  },
+
+  "sections": [
+    {
+      "id": "structural-walls",
+      "label": "Rhythmic Structural Walls",
+      "image": "images/01-structural-walls.jpeg",
+      "focus": "chords",
+      "body": "The rhythmic structure of the song is represented by accented sustained chords instead of the use of percussion. This maintains the heaviness of the song.\n\nSimilarly I have created rhythmic structural walls to give a sense of heaviness to the space."
+    },
+    {
+      "id": "exposed-concrete",
+      "label": "The Minor Key, in Concrete",
+      "image": "images/02-concrete.jpeg",
+      "focus": "melody",
+      "body": "The song's melodic structure is in a minor key. In the world of music the minor key is known for creating sad, dark and grey melancholic emotions within a song.\n\nAs an architectural intervention, I have used exposed concrete for this space as the main material. The combination of concrete and heavy structural walls creates a dark atmosphere within the space."
+    },
+    {
+      "id": "monumental-volume",
+      "label": "Reverberation and Scale",
+      "image": "images/03-monumental.jpeg",
+      "focus": "reverb",
+      "body": "This song also has well defined reverberations and echoes, which enhance the emotional depth of the song.\n\nI was able to achieve this emotional depth around the atmosphere of this space by creating a double-heighted, monumental scale throughout the common ground."
+    },
+    {
+      "id": "mirrored-ceiling",
+      "label": "Layered Vocals, Layered Reflections",
+      "image": "images/04-mirrored-ceiling.jpeg",
+      "focus": "vocals",
+      "body": "The layered vocals of the song almost act as a reflection — a reflection that creates an idea of an abstract conversation.\n\nThe long transformable mirrored panels on the ceiling create reflections for individuals to perceive themselves within the movement of the crowd, creating moments of personal contemplation within a shared civic space, and encouraging them to reflect on their own contribution to fast fashion and its wider environmental and social impacts."
+    }
+  ]
+}
