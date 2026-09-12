@@ -6,35 +6,29 @@
   "credit": {
     "track": "Solitude",
     "artist": "M83",
-    "note": "Used for academic analysis in a non-commercial university project. Stems are shared placeholders."
+    "note": "The supplied drum stem is silent, so this panel runs on three stems. Academic use."
   },
   "audio": {
     "loop": true,
     "tau": 0.3,
     "channels": [
       {
-        "id": "chords",
-        "label": "Chords",
-        "src": "../_stems/a.mp3",
+        "id": "bass",
+        "label": "Bassline",
+        "src": "stems/bass.mp3",
         "trim": 1.0
       },
       {
-        "id": "melody",
-        "label": "Melody",
-        "src": "../_stems/b.mp3",
-        "trim": 0.85
-      },
-      {
-        "id": "reverb",
-        "label": "Reverb",
-        "src": "../_stems/c.mp3",
-        "trim": 1.15
+        "id": "chords",
+        "label": "Chords",
+        "src": "stems/chords.mp3",
+        "trim": 1.0
       },
       {
         "id": "vocals",
         "label": "Vocals",
-        "src": "../_stems/d.mp3",
-        "trim": 0.9
+        "src": "stems/vocals.mp3",
+        "trim": 1.0
       }
     ]
   },
@@ -50,7 +44,7 @@
       "image": "images/01-structural-walls.jpg",
       "focus": "chords",
       "mix": {
-        "reverb": 0.4
+        "bass": 0.5
       },
       "body": "The rhythmic structure of the song is represented by accented sustained chords instead of the use of percussion. This maintains the heaviness of the song.\n\nSimilarly I have created rhythmic structural walls to give a sense of heaviness to the space."
     },
@@ -58,14 +52,17 @@
       "id": "exposed-concrete",
       "label": "The Minor Key, in Concrete",
       "image": "images/02-concrete.jpg",
-      "focus": "melody",
-      "body": "The song's melodic structure is in a minor key. In the world of music the minor key is known for creating sad, dark and grey melancholic emotions within a song.\n\nAs an architectural intervention, I have used exposed concrete for this space as the main material. The combination of concrete and heavy structural walls creates a dark atmosphere within the space."
+      "focus": "bass",
+      "body": "The song's melodic structure is in a minor key. In the world of music the minor key is known for creating sad, dark and grey melancholic emotions within a song.\n\nAs an architectural intervention, I have used exposed concrete for this space as the main material. The combination of concrete and heavy structural walls creates a dark atmosphere within the space.",
+      "mix": {
+        "chords": 0.45
+      }
     },
     {
       "id": "monumental-volume",
       "label": "Reverberation and Scale",
       "image": "images/03-monumental.jpg",
-      "focus": "reverb",
+      "focus": "chords",
       "body": "This song also has well defined reverberations and echoes, which enhance the emotional depth of the song.\n\nI was able to achieve this emotional depth around the atmosphere of this space by creating a double-heighted, monumental scale throughout the common ground."
     },
     {

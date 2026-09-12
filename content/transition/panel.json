@@ -6,29 +6,35 @@
   "credit": {
     "track": "Innerbloom",
     "artist": "RÜFÜS DU SOL",
-    "note": "Used for academic analysis in a non-commercial university project. Stems are shared placeholders."
+    "note": "Used for academic analysis in a non-commercial university project."
   },
   "audio": {
     "loop": true,
     "tau": 0.3,
     "channels": [
       {
-        "id": "rhythm",
-        "label": "Rhythm & Chords",
-        "src": "../_stems/a.mp3",
+        "id": "bass",
+        "label": "Bass",
+        "src": "stems/bass.mp3",
+        "trim": 1.0
+      },
+      {
+        "id": "drums",
+        "label": "Rhythm",
+        "src": "stems/drums.mp3",
         "trim": 1.0
       },
       {
         "id": "synths",
         "label": "Synths",
-        "src": "../_stems/b.mp3",
-        "trim": 0.85
+        "src": "stems/synths.mp3",
+        "trim": 1.0
       },
       {
         "id": "vocals",
         "label": "Vocals",
-        "src": "../_stems/d.mp3",
-        "trim": 0.9
+        "src": "stems/vocals.mp3",
+        "trim": 1.0
       }
     ]
   },
@@ -42,7 +48,10 @@
       "id": "rhythm-structure",
       "label": "Rhythm and Structure",
       "image": "images/01-structure.jpg",
-      "focus": "rhythm",
+      "focus": [
+        "drums",
+        "bass"
+      ],
       "body": "The song's rhythmic structure and long, sustained chords are translated into the building's concrete framework and V-shaped columns.\n\nThe repeated xylophone-like notes, which follow a melodic zigzag progression, are expressed through the angular rhythm of the V-columns. In contrast, the sustained chords are represented by the horizontal concrete floor slabs, which hold the composition together as a continuous structural foundation."
     },
     {
@@ -51,7 +60,7 @@
       "image": "images/02-gardenscape.jpg",
       "focus": "synths",
       "mix": {
-        "rhythm": 0.42
+        "bass": 0.4
       },
       "body": "The song's iconic synthesizer progression reaches its fullest expression at the climax, becoming one of the most recognisable elements of Innerbloom. This progression is translated into the gardenscape, which forms a defining part of both the space and the wider building.\n\nThe vibrancy and openness of the melody are reflected through greenery, fresh air and social activity, creating an atmosphere that feels peaceful, restorative and alive."
     },

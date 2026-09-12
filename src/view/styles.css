@@ -190,3 +190,12 @@ body[data-reader=true] .prof{opacity:.2}
 .panel-host[hidden]{display:none}
 .controls .back svg{width:.95rem;height:.95rem}
 .controls .back{margin-right:.25rem}
+
+
+/* ══════════════ panel loading ══════════════ */
+.loader{position:fixed;inset:0;z-index:20;display:grid;place-content:center;justify-items:center;
+  gap:1rem;background:var(--ground);text-align:center}
+.loader .what{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--muted);margin:0}
+.loader .bar{width:min(20rem,60vw);height:2px;background:var(--line);overflow:hidden}
+.loader .bar i{display:block;height:100%;width:0;background:var(--focus);transition:width 160ms linear}

@@ -57,10 +57,16 @@ export class AudioEngine {
     }));
   }
 
-  /** Tear down the previous panel's chains and wire this manifest's. */
+  /** Tear down the previous panel's chains and wire this manifest's.
+
+      Real stems decode to ~46 MB each, so the cache is evicted down to just
+      this panel's set BEFORE fetching. Holding five panels at once would be
+      close to a gigabyte; the cost is a re-decode when returning to a panel. */
   async configure(manifest, base, onProgress = () => {}) {
-    await this.prefetch(manifest.audio.channels.map(c => c.src), base, onProgress);
+    const wanted = new Set(manifest.audio.channels.map(c => new URL(c.src, base).href));
     this.stop();
+    for (const url of [...this.cache.keys()]) if (!wanted.has(url)) this.cache.delete(url);
+    await this.prefetch(manifest.audio.channels.map(c => c.src), base, onProgress);
     this.tau  = manifest.audio.tau ?? this.tau;
     this.loop = manifest.audio.loop !== false;
     this.channels = manifest.audio.channels.map(c => {

@@ -231,3 +231,55 @@ resolve to the same mix.
 `#/<panel-id>` opens a panel; `#/<panel-id>/<section-id>` opens it at a
 sub-component. Both are shareable and survive a reload — useful for sending an
 assessor straight to one moment.
+
+## The real stems
+
+`STEMS/` holds the raw multitrack exports as delivered. `tools/encode_stems.sh`
+turns one song's exports into the web set:
+
+```bash
+bash tools/encode_stems.sh "SOLITUDE" common-ground \
+  bass="untitled - Bass.wav" chords="untitled - Instruments.wav" vocals="untitled - Vocals.wav"
+```
+
+It trims every stem to the **shortest common length** before encoding. The
+exports differ by a few hundred samples, which is inaudible once but drifts
+audibly over a loop. Output is mono 44.1 kHz MP3 at 96 kbps — about 3 MB per
+stem, 12 MB per panel.
+
+Trims are all `1.0`. These are true stems from one mix, so they already sum back
+to the original: "all weights at 1.0" reconstructs the track, and correcting
+levels would break that.
+
+### Three problems in the supplied exports
+
+| | |
+|---|---|
+| `Track 1` in every song | Completely silent (−91 dB). Not the full mix — an empty track. Ignored. |
+| `SOLITUDE / Drums` | Silent across all 222 s. **Common Ground runs on three stems**, not four. |
+| `INNERBLOOM / Instruments` | Truncated to 20 s of a 253 s song. `Track 6` is full length and healthy, so that is used as the synth stem. |
+
+Re-export any of these and re-run `encode_stems.sh` to fix.
+
+### Memory
+
+Real stems decode to roughly 46 MB each — a four-stem panel is ~180 MB in RAM.
+The engine therefore **evicts the cache down to the current panel's set** on
+every panel change. Holding all five would approach a gigabyte. The cost is a
+re-download and re-decode when returning to a panel, which the loading state
+covers.
+
+## Publishing with real audio
+
+The stems are gitignored by default. A private academic demo is one thing;
+putting separated commercial recordings on a public URL is distribution, and git
+history is not easily undone.
+
+- **Presenting from your laptop** — nothing to do. `npm start` uses the local
+  stems and everything works.
+- **Sharing a link** — make the GitHub repo **private**, delete the
+  `content/*/stems/` lines from `.gitignore`, and put the Cloudflare site behind
+  **Cloudflare Access** (Zero Trust → Access → Applications) with an email
+  one-time-code policy for your assessors.
+- **Leaving it gitignored and deploying anyway** — the site loads and reads
+  correctly but enters its no-sound state, since the stems 404.

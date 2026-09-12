@@ -52,6 +52,17 @@ const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v
 
   const grid = createGrid(app, index, base, id => openPanel(id, true));
 
+  // entering a panel now downloads ~12 MB of real stems, so it needs a state
+  const loader = document.createElement('div');
+  loader.className = 'loader';
+  loader.hidden = true;
+  loader.innerHTML = '<p class="what"></p><div class="bar"><i></i></div>';
+  app.appendChild(loader);
+  const loadBar = loader.querySelector('i');
+  const loadWhat = loader.querySelector('.what');
+  const showLoader = t => { loadWhat.textContent = t; loadBar.style.width = '0%'; loader.hidden = false; };
+  const hideLoader = () => { loader.hidden = true; };
+
   // ---------- profile switch (global — survives panel changes) ----------
   const prof = document.createElement('div');
   prof.className = 'prof';
@@ -125,6 +136,7 @@ const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v
     unmountPanel();
     grid.hide();
     setState('loading-panel');
+    showLoader(`Loading ${entry.title}`);
 
     const pBase = new URL(entry.path, base);
     let panel;
@@ -132,7 +144,7 @@ const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v
       const res = await fetch(pBase);
       if (!res.ok) throw new Error(`${entry.path} — HTTP ${res.status}`);
       panel = await res.json();
-    } catch (e) { notice(`Could not load ${entry.title}`); backToGrid(); return; }
+    } catch (e) { hideLoader(); notice(`Could not load ${entry.title}`); backToGrid(); return; }
 
     document.documentElement.style.setProperty('--tau', `${(panel.audio.tau ?? 0.3) * 1000}ms`);
 
@@ -191,13 +203,14 @@ const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v
     });
 
     try {
-      await engine.configure(panel, pBase);
+      await engine.configure(panel, pBase, p => { loadBar.style.width = (p * 100).toFixed(0) + '%'; });
       await engine.start();
       audioOk = true;
     } catch (e) {
       audioOk = false;
       notice('Sound unavailable — images and text only');
     }
+    hideLoader();
 
     setState('running');
     document.body.dataset.screen = 'panel';
@@ -256,11 +269,11 @@ const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v
   // ---------- gate ----------
   setState('gated');
   const gate = createGate(app, index, async onProgress => {
+    // The gate exists to unlock audio, not to download it — each panel fetches
+    // its own stems on entry, with its own progress.
     engine.ensureContext();
     await engine.resume();
-    // one shared placeholder stem set — every panel maps its own channels onto it.
-    // Paths in panels.json resolve against panels.json, not the document root.
-    await engine.prefetch(['_stems/a.mp3', '_stems/b.mp3', '_stems/c.mp3', '_stems/d.mp3'], base, onProgress);
+    onProgress(1);
     gate.dismiss();
     const { panel, section } = parseHash();
     if (panel && index.panels.some(p => p.id === panel)) {

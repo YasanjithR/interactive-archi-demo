@@ -6,29 +6,35 @@
   "credit": {
     "track": "Every Teardrop Is a Waterfall",
     "artist": "Coldplay",
-    "note": "Used for academic analysis in a non-commercial university project. Stems are shared placeholders."
+    "note": "Used for academic analysis in a non-commercial university project."
   },
   "audio": {
     "loop": true,
     "tau": 0.3,
     "channels": [
       {
-        "id": "rhythm",
-        "label": "Drum & Bass",
-        "src": "../_stems/a.mp3",
+        "id": "bass",
+        "label": "Bass",
+        "src": "stems/bass.mp3",
+        "trim": 1.0
+      },
+      {
+        "id": "drums",
+        "label": "Drums",
+        "src": "stems/drums.mp3",
         "trim": 1.0
       },
       {
         "id": "synths",
         "label": "Synths",
-        "src": "../_stems/b.mp3",
-        "trim": 0.85
+        "src": "stems/synths.mp3",
+        "trim": 1.0
       },
       {
         "id": "vocals",
         "label": "Vocals",
-        "src": "../_stems/d.mp3",
-        "trim": 0.9
+        "src": "stems/vocals.mp3",
+        "trim": 1.0
       }
     ]
   },
@@ -42,7 +48,10 @@
       "id": "concrete-canvas",
       "label": "Concrete Canvas",
       "image": "images/01-canvas.jpg",
-      "focus": "rhythm",
+      "focus": [
+        "drums",
+        "bass"
+      ],
       "body": "The song's traditional drum and bass patterns establish a steady rhythm beneath its contemporary sound. This stability is translated into the exposed concrete structure, which provides a strong and ordered framework for the workshop.\n\nHere, the grey concrete does not represent melancholy; instead, it acts as a neutral canvas against which the colours, materials and creative activities of the designers can stand out."
     },
     {
@@ -51,7 +60,7 @@
       "image": "images/02-atrium.jpg",
       "focus": "synths",
       "mix": {
-        "rhythm": 0.42
+        "drums": 0.4
       },
       "body": "The atrium connects the production area with the surrounding spaces, just as the song's synthesizers connect its steady bassline with its playful vocals.\n\nNatural light enters through the atrium and spreads throughout the workshop, bringing energy and openness into the space while visually connecting the different stages of sustainable fashion design."
     },

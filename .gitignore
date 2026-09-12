@@ -10,3 +10,10 @@ node_modules/
 # publishing the separated audio is distributing the recording. Either keep the
 # repo private, or uncomment the next line before adding the real stems.
 # content/panel-01/stems/
+
+# Real separated stems — commercial recordings.
+# Keeping them out of history by default: pushing them to a PUBLIC repo
+# distributes the recordings, and git history is not easily undone.
+# To include them (see README → Publishing with real audio), delete these lines.
+content/*/stems/
+STEMS/

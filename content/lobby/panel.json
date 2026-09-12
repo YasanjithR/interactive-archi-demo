@@ -6,7 +6,7 @@
   "credit": {
     "track": "Everything in Its Right Place",
     "artist": "Radiohead",
-    "note": "Used for academic analysis in a non-commercial university project. Stems are shared placeholders."
+    "note": "Used for academic analysis in a non-commercial university project."
   },
   "audio": {
     "loop": true,
@@ -15,20 +15,26 @@
       {
         "id": "bass",
         "label": "Bass",
-        "src": "../_stems/a.mp3",
+        "src": "stems/bass.mp3",
+        "trim": 1.0
+      },
+      {
+        "id": "drums",
+        "label": "Rhythm",
+        "src": "stems/drums.mp3",
+        "trim": 1.0
+      },
+      {
+        "id": "synths",
+        "label": "Synths",
+        "src": "stems/synths.mp3",
         "trim": 1.0
       },
       {
         "id": "vocals",
         "label": "Vocals",
-        "src": "../_stems/d.mp3",
-        "trim": 0.9
-      },
-      {
-        "id": "synths",
-        "label": "Synths",
-        "src": "../_stems/b.mp3",
-        "trim": 0.85
+        "src": "stems/vocals.mp3",
+        "trim": 1.0
       }
     ]
   },

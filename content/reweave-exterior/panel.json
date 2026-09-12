@@ -1,12 +1,12 @@
 {
   "id": "reweave-exterior",
   "title": "Reweave Cremorne",
-  "kicker": "The Statement — a neo-Brutalist exterior",
+  "kicker": "On My Knees — the neo-Brutalist exterior",
   "subtitle": "A building deliberately designed to appear out of context, using Brutalism's language of resistance to challenge fast fashion.",
   "credit": {
-    "track": "",
+    "track": "On My Knees",
     "artist": "",
-    "note": "Track not yet credited — add it to panel.json. Stems are shared placeholders pending separation."
+    "note": "Artist to confirm. Used for academic analysis in a non-commercial university project."
   },
   "audio": {
     "loop": true,
@@ -15,26 +15,26 @@
       {
         "id": "bass",
         "label": "Bassline",
-        "src": "../_stems/a.mp3",
+        "src": "stems/bass.mp3",
+        "trim": 1.0
+      },
+      {
+        "id": "drums",
+        "label": "Rhythm",
+        "src": "stems/drums.mp3",
         "trim": 1.0
       },
       {
         "id": "synths",
         "label": "Synths",
-        "src": "../_stems/b.mp3",
-        "trim": 0.85
+        "src": "stems/synths.mp3",
+        "trim": 1.0
       },
       {
         "id": "vocals",
-        "label": "Harmonies",
-        "src": "../_stems/d.mp3",
-        "trim": 0.9
-      },
-      {
-        "id": "atmos",
-        "label": "Atmosphere",
-        "src": "../_stems/c.mp3",
-        "trim": 1.15
+        "label": "Vocals",
+        "src": "stems/vocals.mp3",
+        "trim": 1.0
       }
     ]
   },
@@ -72,9 +72,12 @@
       "id": "light-and-hope",
       "label": "Light and Hope",
       "image": "images/04-light.jpg",
-      "focus": "atmos",
+      "focus": [
+        "drums",
+        "synths"
+      ],
       "mix": {
-        "synths": 0.45
+        "vocals": 0.5
       },
       "body": "The song's electrifying atmosphere is expressed through the light emerging from the façade openings.\n\nAgainst the heavy concrete mass, this illumination becomes a symbol of hope and transformation. It represents the possibility of a more sustainable future, where fashion can support positive environmental and social change."
     }
