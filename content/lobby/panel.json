@@ -1,0 +1,66 @@
+{
+  "id": "lobby",
+  "title": "The Atmosphere",
+  "kicker": "Radiohead — Everything in Its Right Place",
+  "subtitle": "The ground-floor lobby: melancholy, distortion and electronic intensity as a spatial experience.",
+  "credit": {
+    "track": "Everything in Its Right Place",
+    "artist": "Radiohead",
+    "note": "Used for academic analysis in a non-commercial university project. Stems are shared placeholders."
+  },
+  "audio": {
+    "loop": true,
+    "tau": 0.3,
+    "channels": [
+      {
+        "id": "bass",
+        "label": "Bass",
+        "src": "../_stems/a.mp3",
+        "trim": 1.0
+      },
+      {
+        "id": "vocals",
+        "label": "Vocals",
+        "src": "../_stems/d.mp3",
+        "trim": 0.9
+      },
+      {
+        "id": "synths",
+        "label": "Synths",
+        "src": "../_stems/b.mp3",
+        "trim": 0.85
+      }
+    ]
+  },
+  "hero": {
+    "image": "images/03-light.jpg",
+    "label": "The Atmosphere",
+    "body": "The Atmosphere — Inspired by Radiohead's Everything in Its Right Place, the ground-floor lobby translates the song's melancholy, distortion and electronic intensity into a spatial experience.\n\nHeavy concrete surfaces establish a sombre atmosphere, while fragmented reflections and shifting light create a sense of visual uncertainty. As visitors move towards the ramps and awareness spaces, the lobby becomes a transition between contemplation and discovery, encouraging them to explore the building and uncover the spaces, stories and experiences held within it."
+  },
+  "sections": [
+    {
+      "id": "monumental-volume",
+      "label": "Monumental Volume",
+      "image": "images/01-volume.jpg",
+      "focus": "bass",
+      "body": "The song's deep, prominent bass and sustained reverberations continue the melancholic atmosphere established within the common ground.\n\nThese qualities are translated into a monumental double-height lobby, where large concrete surfaces and an expansive volume give the space a sense of emotional weight, depth and enclosure."
+    },
+    {
+      "id": "layered-reflections",
+      "label": "Layered Vocals and Reflections",
+      "image": "images/02-reflections.jpg",
+      "focus": "vocals",
+      "body": "The polyphonic vocals overlap and emerge at different moments, creating a distorted and emotionally unsettled experience.\n\nThis layering is translated through mirrored ceiling panels positioned at varying heights. As visitors move through the lobby, the panels produce shifting and fragmented reflections, allowing the space to appear different from each position."
+    },
+    {
+      "id": "distortion-light",
+      "label": "Electronic Distortion and Light",
+      "image": "images/03-light.jpg",
+      "focus": "synths",
+      "mix": {
+        "vocals": 0.45
+      },
+      "body": "The distorted vocals and layered synthesizers create the song's electrifying atmosphere. This energy is translated through translucent glass walls along the ramps, integrated with LED panels that cast subtly shifting light into the lobby.\n\nAs people move behind the glass, their silhouettes appear, overlap and dissolve, echoing the song's flickering electronic textures while suggesting the constantly changing and often obscured systems behind fast fashion."
+    }
+  ]
+}

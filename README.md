@@ -1,20 +1,26 @@
-# Common Ground — Stem Stage prototype
+# Reweave Cremorne — Stem Stage
 
-M83's *Solitude*, translated into a public interior. One track split into four
-elements — chords, melody, reverb, vocals — re-balanced as you step through the
-four architectural moves each element produced. The element in front rises; the
-others duck **and** darken. The song never restarts.
+Five spaces, five songs. Each space is built from the parts of its score, and
+stepping through its sub-components re-balances the mix live: the element in
+front rises, the others duck **and** darken. The song never restarts.
 
-**Renders are real. Audio is still placeholder** — synthesised stand-ins named
-for the four elements, pending separation of the actual recording.
+| Panel | Song |
+|---|---|
+| Reweave Cremorne — the neo-Brutalist exterior | *(track to be credited)* |
+| The Atmosphere — the ground-floor lobby | Radiohead — Everything in Its Right Place |
+| Common Ground — the public entrance | M83 — Solitude |
+| The Transition Space — the garden | RÜFÜS DU SOL — Innerbloom |
+| The Kaleidoscope — the workshop | Coldplay — Every Teardrop Is a Waterfall |
 
-The four renders share one camera, so stepping reads as the space assembling
-itself: structural walls → concrete → monumental volume → mirrored ceiling.
-Because of that the stage uses `object-fit: contain` and applies no scale or pan
-on transition — the images must register exactly, and cropping a symmetric
-one-point perspective would destroy it.
+A landing gate opens onto a grid of the five; picking one enters the stepped
+experience. Within each panel the renders share one camera, so stepping reads as
+the space assembling itself rather than as a slideshow. That is why the stage
+uses `object-fit: contain` and applies no scale or pan on transition — the
+images must register exactly.
 
----
+**Renders are real. Audio is still placeholder** — one shared set of four
+synthesised stems in `content/_stems/`, which every panel maps its own channel
+names onto. Replace per panel when the real recordings are separated.
 
 ## Install
 
@@ -109,14 +115,15 @@ stay perfectly aligned with each other.
 
 ### Images
 
-One render per part in `content/panel-01/images/`, pointed at from `panel.json`.
-Originals are kept in `content/panel-01/source/`.
+One render per part in `content/<panel>/images/`, pointed at from that panel's
+`panel.json`. Source material as delivered is kept in `Panels/` (in the repo,
+excluded from deploys via `.assetsignore`).
 
 Keep the camera identical across all of them. That is what makes the cross-fade
 read as a build-up rather than a slideshow, and it is the strongest thing about
 the current set.
 
-The hero and part 04 deliberately share `04-mirrored-ceiling.jpeg`: you open on
+In several panels the hero and the final part deliberately share an image: you open on
 the finished space with everything playing, peel it back to the walls, and
 return to it with only the vocals in front.
 
@@ -202,3 +209,25 @@ edit a file under `src/` to add a panel, the abstraction has leaked.
 
 `_to_delete/` holds zero-byte intermediates that couldn't be removed from this
 side. Delete the folder yourself — nothing references it.
+
+
+## Adding or changing a panel
+
+`content/panels.json` is the index — id, title, kicker, blurb, cover and the
+path to that panel's `panel.json`. **Paths in it resolve against `panels.json`
+itself**, not the document root.
+
+Each panel folder is self-contained: `panel.json` plus `images/`. Channel `src`
+paths point at the shared `../_stems/` set for now; when a panel gets its own
+separated stems, drop them in `content/<panel>/stems/` and change the `src`
+values. Nothing under `src/` needs touching either way.
+
+`npm test` validates every panel in the index: part counts agree with the index,
+every `focus` and `mix` key names a real channel, and no two adjacent parts
+resolve to the same mix.
+
+## Routing
+
+`#/<panel-id>` opens a panel; `#/<panel-id>/<section-id>` opens it at a
+sub-component. Both are shareable and survive a reload — useful for sending an
+assessor straight to one moment.

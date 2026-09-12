@@ -5,7 +5,7 @@ export function createGate(root, panel, onEnter) {
   el.className = 'gate';
   el.innerHTML = `
     <div class="inner">
-      <p class="kicker">${panel.kicker || 'A panel and its score'}</p>
+      <p class="kicker">${panel.kicker || 'Five spaces, five songs'}</p>
       <h1>${panel.title}</h1>
       <p>${panel.subtitle || ''}</p>
       <button class="enter" type="button">Enter</button>

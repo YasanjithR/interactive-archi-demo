@@ -1,0 +1,82 @@
+{
+  "id": "reweave-exterior",
+  "title": "Reweave Cremorne",
+  "kicker": "The Statement — a neo-Brutalist exterior",
+  "subtitle": "A building deliberately designed to appear out of context, using Brutalism's language of resistance to challenge fast fashion.",
+  "credit": {
+    "track": "",
+    "artist": "",
+    "note": "Track not yet credited — add it to panel.json. Stems are shared placeholders pending separation."
+  },
+  "audio": {
+    "loop": true,
+    "tau": 0.3,
+    "channels": [
+      {
+        "id": "bass",
+        "label": "Bassline",
+        "src": "../_stems/a.mp3",
+        "trim": 1.0
+      },
+      {
+        "id": "synths",
+        "label": "Synths",
+        "src": "../_stems/b.mp3",
+        "trim": 0.85
+      },
+      {
+        "id": "vocals",
+        "label": "Harmonies",
+        "src": "../_stems/d.mp3",
+        "trim": 0.9
+      },
+      {
+        "id": "atmos",
+        "label": "Atmosphere",
+        "src": "../_stems/c.mp3",
+        "trim": 1.15
+      }
+    ]
+  },
+  "hero": {
+    "image": "images/04-light.jpg",
+    "label": "Reweave Cremorne",
+    "body": "The Statement — A neo-Brutalist building in the heart of Cremorne, deliberately designed to appear out of context. Its monumental form contrasts with its surroundings, allowing it to stand out as something unfamiliar and provocative.\n\nHistorically, Brutalism has been associated with independence, social freedom and resistance to established systems. Reweave Cremorne adopts this architectural language to challenge fast fashion and its damaging environmental and social consequences, including textile waste and child labour.\n\nIn contrast to the heavy concrete exterior, light shines through the openings as a symbol of hope — representing sustainable fashion as a response to this global issue."
+  },
+  "sections": [
+    {
+      "id": "concrete-massing",
+      "label": "Concrete Massing",
+      "image": "images/01-massing.jpg",
+      "focus": "bass",
+      "body": "The song begins with a deep, reverberating bassline that evokes sadness and melancholy.\n\nThe weight and expansiveness of the bass are translated into large concrete volumes, while variations in their depth intensify the building's sense of mass and emotional heaviness."
+    },
+    {
+      "id": "rhythmic-depth",
+      "label": "Rhythmic Depth",
+      "image": "images/02-depth.jpg",
+      "focus": "synths",
+      "mix": {
+        "bass": 0.4
+      },
+      "body": "The powerful synthesizers form a recurring pattern throughout the chorus.\n\nThis rhythm is translated into subtle changes in the depth of the façade, with certain concrete volumes projecting outward as though the building is responding to the movement and intensity of the music."
+    },
+    {
+      "id": "openings",
+      "label": "Openings and Vocal Harmonies",
+      "image": "images/03-openings.jpg",
+      "focus": "vocals",
+      "body": "The openings and glazed elements represent the song's layered vocal harmonies.\n\nNarrow openings correspond to higher-pitched notes, while wider openings express the lower notes. Together, they create a visual composition that reflects the changing pitch, depth and rhythm of the vocals."
+    },
+    {
+      "id": "light-and-hope",
+      "label": "Light and Hope",
+      "image": "images/04-light.jpg",
+      "focus": "atmos",
+      "mix": {
+        "synths": 0.45
+      },
+      "body": "The song's electrifying atmosphere is expressed through the light emerging from the façade openings.\n\nAgainst the heavy concrete mass, this illumination becomes a symbol of hope and transformation. It represents the possibility of a more sustainable future, where fashion can support positive environmental and social change."
+    }
+  ]
+}

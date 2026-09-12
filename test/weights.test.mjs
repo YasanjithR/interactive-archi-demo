@@ -78,29 +78,42 @@ test('flatten derives depth from structure', () => {
   assert.deepEqual(f.map(n => [n.id, n.depth]), [['a', 0], ['a1', 1], ['b', 0]]);
 });
 
-test('every part in the real manifest names a channel that exists', async () => {
+test('every panel in the index resolves, and its parts name channels that exist', async () => {
   const { readFileSync } = await import('node:fs');
-  const p = JSON.parse(readFileSync(new URL('../content/panel-01/panel.json', import.meta.url)));
-  const ids = new Set(p.audio.channels.map(c => c.id));
-  for (const s of p.sections) {
-    for (const f of [].concat(s.focus || [])) assert.ok(ids.has(f), `unknown focus stem "${f}" in ${s.id}`);
-    for (const k of Object.keys(s.mix || {})) assert.ok(ids.has(k), `unknown mix stem "${k}" in ${s.id}`);
+  const idxUrl = new URL('../content/panels.json', import.meta.url);
+  const idx = JSON.parse(readFileSync(idxUrl));
+  assert.ok(idx.panels.length > 0, 'index lists no panels');
+  for (const entry of idx.panels) {
+    const pUrl = new URL(entry.path, idxUrl);
+    const p = JSON.parse(readFileSync(pUrl));
+    const ids = new Set(p.audio.channels.map(c => c.id));
+    assert.equal(p.sections.length, entry.parts, `${entry.id}: index part count disagrees with the manifest`);
+    for (const s of p.sections) {
+      for (const f of [].concat(s.focus || []))
+        assert.ok(ids.has(f), `${entry.id}/${s.id}: unknown focus stem "${f}"`);
+      for (const k of Object.keys(s.mix || {}))
+        assert.ok(ids.has(k), `${entry.id}/${s.id}: unknown mix stem "${k}"`);
+    }
   }
 });
 
-test('no two consecutive parts differ only by image and text', async () => {
+test('no panel has two consecutive parts that resolve to the same mix', async () => {
   // The running-order rule. Two adjacent parts driven by the same stem with the
   // same supporting mix produce a step with no audible change — at which point
   // the mechanic the piece exists to show goes silent.
   const { readFileSync } = await import('node:fs');
-  const p = JSON.parse(readFileSync(new URL('../content/panel-01/panel.json', import.meta.url)));
-  const ids = p.audio.channels.map(c => c.id);
-  const sig = s => JSON.stringify(nodeMix(s, ids));
-  for (let i = 1; i < p.sections.length; i++) {
-    assert.notEqual(
-      sig(p.sections[i]), sig(p.sections[i - 1]),
-      `"${p.sections[i - 1].id}" and "${p.sections[i].id}" resolve to the same mix — ` +
-      `stepping between them changes nothing audible. Interleave them, or vary the bed.`
-    );
+  const idxUrl = new URL('../content/panels.json', import.meta.url);
+  const idx = JSON.parse(readFileSync(idxUrl));
+  for (const entry of idx.panels) {
+    const p = JSON.parse(readFileSync(new URL(entry.path, idxUrl)));
+    const ids = p.audio.channels.map(c => c.id);
+    const sig = s => JSON.stringify(nodeMix(s, ids));
+    for (let i = 1; i < p.sections.length; i++) {
+      assert.notEqual(
+        sig(p.sections[i]), sig(p.sections[i - 1]),
+        `${entry.id}: "${p.sections[i - 1].id}" and "${p.sections[i].id}" resolve to the same mix — ` +
+        `stepping between them changes nothing audible. Interleave them, or vary the bed.`
+      );
+    }
   }
 });

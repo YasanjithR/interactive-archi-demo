@@ -1,0 +1,51 @@
+{
+  "title": "Reweave Cremorne",
+  "subtitle": "Five spaces, five songs. Each one built from the parts of its score — step through and hear which element produced what you are looking at.",
+  "panels": [
+    {
+      "id": "reweave-exterior",
+      "title": "Reweave Cremorne",
+      "kicker": "The Statement — a neo-Brutalist exterior",
+      "blurb": "A building deliberately designed to appear out of context, using Brutalism's language of resistance to challenge fast fashion.",
+      "cover": "reweave-exterior/images/04-light.jpg",
+      "parts": 4,
+      "path": "reweave-exterior/panel.json"
+    },
+    {
+      "id": "lobby",
+      "title": "The Atmosphere",
+      "kicker": "Radiohead — Everything in Its Right Place",
+      "blurb": "The ground-floor lobby: melancholy, distortion and electronic intensity as a spatial experience.",
+      "cover": "lobby/images/03-light.jpg",
+      "parts": 3,
+      "path": "lobby/panel.json"
+    },
+    {
+      "id": "common-ground",
+      "title": "Common Ground",
+      "kicker": "M83 — Solitude",
+      "blurb": "The public entrance and common ground: the melancholy of fast fashion as a collective urban experience.",
+      "cover": "common-ground/images/04-mirrored-ceiling.jpg",
+      "parts": 4,
+      "path": "common-ground/panel.json"
+    },
+    {
+      "id": "transition",
+      "title": "The Transition Space",
+      "kicker": "RÜFÜS DU SOL — Innerbloom",
+      "blurb": "A moment of pause between the melancholic awareness spaces and the celebratory energy of production.",
+      "cover": "transition/images/03-bloom.jpg",
+      "parts": 3,
+      "path": "transition/panel.json"
+    },
+    {
+      "id": "workshop",
+      "title": "The Kaleidoscope",
+      "kicker": "Coldplay — Every Teardrop Is a Waterfall",
+      "blurb": "The sustainable fashion workshop: the song's colourful, playful and uplifting atmosphere as an energetic creative space.",
+      "cover": "workshop/images/03-colour.jpg",
+      "parts": 3,
+      "path": "workshop/panel.json"
+    }
+  ]
+}

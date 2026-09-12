@@ -7,57 +7,57 @@ import { createCaption } from './view/caption.js';
 import { createHud } from './view/hud.js';
 import { createReader } from './view/reader.js';
 import { createGate } from './view/gate.js';
+import { createGrid } from './view/grid.js';
 
-const PANEL = 'content/panel-01/panel.json';
+const INDEX = 'content/panels.json';
 const app = document.getElementById('app');
-
-const setState = s => app.dataset.state = s;
+const setState = s => { app.dataset.state = s; };
 
 function notice(msg) {
   const n = document.createElement('div');
   n.className = 'notice';
   n.textContent = msg;
   app.appendChild(n);
+  setTimeout(() => n.remove(), 6000);
 }
 
+const ICON_PAUSE = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="3" width="3" height="10" rx=".5"/><rect x="9" y="3" width="3" height="10" rx=".5"/></svg>';
+const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v9.6a.5.5 0 0 0 .77.42l7.2-4.8a.5.5 0 0 0 0-.84l-7.2-4.8A.5.5 0 0 0 5 3.2z"/></svg>';
+
 (async function boot() {
-  const base = new URL(PANEL, location.href);
-  let panel;
+  const base = new URL(INDEX, location.href);
+  let index;
   try {
     const res = await fetch(base);
-    if (!res.ok) throw new Error(`panel.json — HTTP ${res.status}`);
-    panel = await res.json();
+    if (!res.ok) throw new Error(`panels.json — HTTP ${res.status}`);
+    index = await res.json();
   } catch (e) {
-    app.innerHTML = `<p class="fallback">Could not load the panel.<br>${e.message}<br><br>
+    app.innerHTML = `<p class="fallback">Could not load the panels.<br>${e.message}<br><br>
       This needs to be served over http — opening index.html from the file system will not work.<br>
-      Run <code>./serve.sh</code> and open the address it prints.</p>`;
+      Run <code>npm start</code> and open the address it prints.</p>`;
     return;
   }
 
-  // hero is node 0, then the flat list of parts
-  const hero = { id: 'hero', label: panel.hero.label || panel.title, image: panel.hero.image,
-                 body: panel.hero.body || '', hero: true, depth: 0 };
-  const nodes = [hero, ...flatten(panel.sections)];
-  const channels = panel.audio.channels;
-  const channelIds = channels.map(c => c.id);
-  const trims = Object.fromEntries(channels.map(c => [c.id, c.trim ?? 1]));
-  const parts = nodes.length - 1;
+  const engine = new AudioEngine();
+  let profile = PROFILES[DEFAULT_PROFILE];
+  let audioOk = false;
+  let paused = false;
+  let live = null;                       // the mounted panel, or null on the grid
 
-  document.documentElement.style.setProperty('--tau', `${(panel.audio.tau ?? 0.3) * 1000}ms`);
+  // ---------- panel host ----------
+  const host = document.createElement('div');
+  host.className = 'panel-host';
+  host.hidden = true;
+  app.appendChild(host);
 
-  // ---------- view ----------
-  const stage   = createStage(app, nodes, base);
-  const caption = createCaption(app, channels);
-  const reader  = createReader(app, panel.credit);
-  const nav     = new StepNavigator(nodes);
-  const hud     = createHud(app, channels, nodes, i => nav.go(i, 'index'));
+  const grid = createGrid(app, index, base, id => openPanel(id, true));
 
-  // profile switch
+  // ---------- profile switch (global — survives panel changes) ----------
   const prof = document.createElement('div');
   prof.className = 'prof';
+  prof.hidden = true;
   prof.setAttribute('role', 'group');
   prof.setAttribute('aria-label', 'Playback profile');
-  let profile = PROFILES[DEFAULT_PROFILE];
   const profBtns = Object.values(PROFILES).map(p => {
     const b = document.createElement('button');
     b.type = 'button';
@@ -66,127 +66,212 @@ function notice(msg) {
     b.addEventListener('click', () => {
       profile = p;
       profBtns.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-      apply(nav.index);
+      if (live) apply(live.nav.index);
     });
     prof.appendChild(b);
     return b;
   });
   app.appendChild(prof);
 
-  // controls
-  const controls = document.createElement('div');
-  controls.className = 'controls';
-  const ICON_PAUSE = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="3" width="3" height="10" rx=".5"/><rect x="9" y="3" width="3" height="10" rx=".5"/></svg>';
-  const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v9.6a.5.5 0 0 0 .77.42l7.2-4.8a.5.5 0 0 0 0-.84l-7.2-4.8A.5.5 0 0 0 5 3.2z"/></svg>';
-  controls.innerHTML = `
-    <button type="button" data-a="pause" class="icon" aria-label="Pause sound" aria-pressed="false" disabled>${ICON_PAUSE}</button>
-    <button type="button" data-a="prev">Back</button>
-    <button type="button" data-a="next">Next</button>
-    <button type="button" data-a="read" class="read">Read</button>`;
-  app.appendChild(controls);
-  const btnPause = controls.querySelector('[data-a=pause]');
-  const btnPrev = controls.querySelector('[data-a=prev]');
-  const btnNext = controls.querySelector('[data-a=next]');
-  const btnRead = controls.querySelector('[data-a=read]');
-  btnPause.addEventListener('click', togglePause);
-  btnPrev.addEventListener('click', () => nav.prev());
-  btnNext.addEventListener('click', () => nav.next());
-  btnRead.addEventListener('click', () => reader.toggle(btnRead));
+  // ---------- meter pump: only while a glide settles ----------
+  let raf = null, settleUntil = 0;
+  function pump() {
+    if (live) live.hud.setLevels(engine.getLevels());
+    if (performance.now() < settleUntil) raf = requestAnimationFrame(pump);
+    else raf = null;
+  }
+  function nudge() {
+    settleUntil = performance.now() + engine.tau * 1000 * 4;
+    if (!raf) raf = requestAnimationFrame(pump);
+  }
 
-  // ---------- audio ----------
-  const engine = new AudioEngine({ tau: panel.audio.tau ?? 0.3 });
-  let audioOk = false;
-  let paused = false;
+  function apply(i) {
+    if (!live) return;
+    const { targets } = resolve({
+      nodes: live.nodes, activeIndex: i, channelIds: live.channelIds, profile, trims: live.trims
+    });
+    if (audioOk) engine.setTargets(targets);
+    else live.hud.setLevels(Object.fromEntries(live.channelIds.map(id => [id, targets[id].weight])));
+  }
 
-  // ctx.suspend() freezes currentTime, so the stems stay locked to each other
-  // across a pause of any length — nothing to resync on resume.
   async function togglePause() {
-    if (!audioOk) return;
+    if (!audioOk || !live) return;
     paused = !paused;
     try { paused ? await engine.suspend() : await engine.resume(); }
     catch (e) { paused = !paused; return; }
-    btnPause.setAttribute('aria-pressed', String(paused));
-    btnPause.setAttribute('aria-label', paused ? 'Resume sound' : 'Pause sound');
-    btnPause.innerHTML = paused ? ICON_PLAY : ICON_PAUSE;
+    live.btnPause.setAttribute('aria-pressed', String(paused));
+    live.btnPause.setAttribute('aria-label', paused ? 'Resume sound' : 'Pause sound');
+    live.btnPause.innerHTML = paused ? ICON_PLAY : ICON_PAUSE;
     document.body.dataset.paused = String(paused);
     if (!paused) nudge();
   }
 
-  function apply(i) {
-    const node = nodes[i];
-    const { targets } = resolve({ nodes, activeIndex: i, channelIds, profile, trims });
-    if (audioOk) engine.setTargets(targets);
-    else hud.setLevels(Object.fromEntries(channelIds.map(id => [id, targets[id].weight])));
+  // ---------- mount / unmount a panel ----------
+  function unmountPanel() {
+    engine.stop();
+    host.innerHTML = '';
+    host.hidden = true;
+    prof.hidden = true;
+    live = null;
+    paused = false;
+    document.body.dataset.paused = 'false';
+    document.body.dataset.reader = 'false';
   }
 
-  nav.onChange((node, i) => {
-    stage.setActive(i);
-    caption.set(node, i, parts);
-    reader.set(node, i, parts);
-    hud.setActive(i, node);
-    btnPrev.disabled = nav.atStart;
-    btnNext.disabled = nav.atEnd;
-    btnNext.textContent = nav.atEnd ? 'Next' : `Next`;
-    if (!node.hero) history.replaceState(null, '', '#' + node.id);
-    else history.replaceState(null, '', location.pathname);
-    apply(i);
+  async function openPanel(id, pushHash) {
+    const entry = index.panels.find(p => p.id === id);
+    if (!entry) return;
+
+    unmountPanel();
+    grid.hide();
+    setState('loading-panel');
+
+    const pBase = new URL(entry.path, base);
+    let panel;
+    try {
+      const res = await fetch(pBase);
+      if (!res.ok) throw new Error(`${entry.path} — HTTP ${res.status}`);
+      panel = await res.json();
+    } catch (e) { notice(`Could not load ${entry.title}`); backToGrid(); return; }
+
+    document.documentElement.style.setProperty('--tau', `${(panel.audio.tau ?? 0.3) * 1000}ms`);
+
+    const hero = { id: 'hero', label: panel.hero.label || panel.title, image: panel.hero.image,
+                   body: panel.hero.body || '', hero: true, depth: 0 };
+    const nodes = [hero, ...flatten(panel.sections)];
+    const channels = panel.audio.channels;
+    const channelIds = channels.map(c => c.id);
+    const trims = Object.fromEntries(channels.map(c => [c.id, c.trim ?? 1]));
+    const parts = nodes.length - 1;
+
+    host.hidden = false;
+    prof.hidden = false;
+    const stage   = createStage(host, nodes, pBase);
+    const caption = createCaption(host, channels);
+    const reader  = createReader(host, panel.credit);
+    const nav     = new StepNavigator(nodes);
+    const hud     = createHud(host, channels, nodes, i => nav.go(i, 'index'));
+
+    const controls = document.createElement('div');
+    controls.className = 'controls';
+    controls.innerHTML = `
+      <button type="button" data-a="back" class="icon back" aria-label="All panels">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2.5" width="5.2" height="5.2" rx="1"/><rect x="8.8" y="2.5" width="5.2" height="5.2" rx="1"/><rect x="2" y="9.3" width="5.2" height="4.2" rx="1"/><rect x="8.8" y="9.3" width="5.2" height="4.2" rx="1"/></svg>
+      </button>
+      <button type="button" data-a="pause" class="icon" aria-label="Pause sound" aria-pressed="false">${ICON_PAUSE}</button>
+      <button type="button" data-a="prev">Back</button>
+      <button type="button" data-a="next">Next</button>
+      <button type="button" data-a="read" class="read">Read</button>`;
+    host.appendChild(controls);
+
+    const btnBack  = controls.querySelector('[data-a=back]');
+    const btnPause = controls.querySelector('[data-a=pause]');
+    const btnPrev  = controls.querySelector('[data-a=prev]');
+    const btnNext  = controls.querySelector('[data-a=next]');
+    const btnRead  = controls.querySelector('[data-a=read]');
+
+    btnBack.addEventListener('click', backToGrid);
+    btnPause.addEventListener('click', togglePause);
+    btnPrev.addEventListener('click', () => nav.prev());
+    btnNext.addEventListener('click', () => nav.next());
+    btnRead.addEventListener('click', () => reader.toggle(btnRead));
+
+    live = { id, panel, nodes, channelIds, trims, nav, stage, caption, reader, hud, btnPause, btnRead, parts };
+
+    nav.onChange((node, i) => {
+      stage.setActive(i);
+      caption.set(node, i, parts);
+      reader.set(node, i, parts);
+      hud.setActive(i, node);
+      btnPrev.disabled = nav.atStart;
+      btnNext.disabled = nav.atEnd;
+      setHash(id, node.hero ? null : node.id);
+      apply(i);
+      if (audioOk && !paused) nudge();
+    });
+
+    try {
+      await engine.configure(panel, pBase);
+      await engine.start();
+      audioOk = true;
+    } catch (e) {
+      audioOk = false;
+      notice('Sound unavailable — images and text only');
+    }
+
+    setState('running');
+    document.body.dataset.screen = 'panel';
+    nav.go(0, 'init');
+    nudge();
+
+    const missing = stage.failures();
+    if (missing) notice(`${missing} image${missing > 1 ? 's' : ''} failed to load`);
+    if (pushHash) btnNext.focus();
+  }
+
+  function backToGrid() {
+    unmountPanel();
+    grid.show();
+    setState('grid');
+    setHash(null);
+  }
+
+  // ---------- routing ----------
+  let suppressHash = false;
+  function setHash(panelId, sectionId) {
+    suppressHash = true;
+    const h = !panelId ? '' : '#/' + panelId + (sectionId ? '/' + sectionId : '');
+    history.replaceState(null, '', h || location.pathname);
+    setTimeout(() => { suppressHash = false; }, 0);
+  }
+  function parseHash() {
+    const m = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+    return { panel: m[0] || null, section: m[1] || null };
+  }
+  addEventListener('hashchange', () => {
+    if (suppressHash) return;
+    const { panel, section } = parseHash();
+    if (!panel) { if (live) backToGrid(); return; }
+    if (!live || live.id !== panel) openPanel(panel, false).then(() => {
+      if (section && live) live.nav.goId(section, 'hash');
+    });
+    else if (section) live.nav.goId(section, 'hash');
   });
 
   // ---------- keyboard ----------
   addEventListener('keydown', e => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
-    if (e.key === 'Escape' && reader.open) { reader.hide(); return; }
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); nav.next(); }
-    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); nav.prev(); }
+    if (!live) return;
+    if (e.key === 'Escape') {
+      if (live.reader.open) live.reader.hide(); else backToGrid();
+      return;
+    }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); live.nav.next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); live.nav.prev(); }
     else if (e.key === 'p' || e.key === 'P') { e.preventDefault(); togglePause(); }
-    else if (e.key === 'Enter' && app.dataset.state === 'running') reader.toggle(btnRead);
-    else if (/^[0-9]$/.test(e.key)) nav.go(Number(e.key), 'key');
+    else if (e.key === 'Enter') live.reader.toggle(live.btnRead);
+    else if (/^[0-9]$/.test(e.key)) live.nav.go(Number(e.key), 'key');
   });
-
-  // ---------- meter loop: only while a glide is settling ----------
-  let raf = null, settleUntil = 0;
-  function pump() {
-    hud.setLevels(engine.getLevels());
-    if (performance.now() < settleUntil) raf = requestAnimationFrame(pump);
-    else raf = null;
-  }
-  function nudge() {
-    settleUntil = performance.now() + (engine.tau * 1000 * 4);
-    if (!raf) raf = requestAnimationFrame(pump);
-  }
-  nav.onChange(() => { if (audioOk && !paused) nudge(); });
 
   // ---------- gate ----------
   setState('gated');
-  const gate = createGate(app, panel, async onProgress => {
-    await engine.load(panel, base, onProgress);
-    await engine.start();
-    audioOk = true;
-    btnPause.disabled = false;
-    setState('running');
+  const gate = createGate(app, index, async onProgress => {
+    engine.ensureContext();
+    await engine.resume();
+    // one shared placeholder stem set — every panel maps its own channels onto it.
+    // Paths in panels.json resolve against panels.json, not the document root.
+    await engine.prefetch(['_stems/a.mp3', '_stems/b.mp3', '_stems/c.mp3', '_stems/d.mp3'], base, onProgress);
     gate.dismiss();
-    nav.go(0, 'init');
-    nudge();
-    const missing = stage.failures();
-    if (missing) notice(`${missing} image${missing > 1 ? 's' : ''} failed to load`);
+    const { panel, section } = parseHash();
+    if (panel && index.panels.some(p => p.id === panel)) {
+      await openPanel(panel, false);
+      if (section && live) live.nav.goId(section, 'hash');
+    } else {
+      grid.show();
+      setState('grid');
+    }
   });
   gate.focus();
 
-  // degraded: entering failed, but the piece still has to work
-  addEventListener('unhandledrejection', () => {
-    if (audioOk || app.dataset.state === 'degraded') return;
-    setState('degraded');
-    gate.dismiss();
-    nav.go(0, 'init');
-    notice('Sound unavailable — images and text only');
-  });
-
-  // deep link
-  if (location.hash) {
-    const i = nav.indexOfId(location.hash.slice(1));
-    if (i > 0) nav.index = i;
-  }
-
-  // dev handle
-  window.stemStage = { engine, nav, nodes, resolve, get profile() { return profile; } };
+  window.stemStage = { engine, index, resolve, get live() { return live; }, get profile() { return profile; } };
 })();
