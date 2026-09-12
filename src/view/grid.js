@@ -3,7 +3,7 @@
    A scrollable page rather than a fixed stage — this is the one screen where
    the reader is comparing rather than looking, so it gets the browser's own
    scrolling back. */
-export function createGrid(root, index, base, onOpen) {
+export function createGrid(root, index, base, onOpen, onIntent = () => {}) {
   const el = document.createElement('div');
   el.className = 'grid-screen';
   el.hidden = true;
@@ -30,6 +30,12 @@ export function createGrid(root, index, base, onOpen) {
         <span class="parts">${p.parts} sub-components</span>
       </span>`;
     card.addEventListener('click', () => onOpen(p.id));
+    // Hovering or tabbing to a card is a strong signal. Warm the network cache
+    // now so the click has less to wait for.
+    let warmed = false;
+    const warm = () => { if (!warmed) { warmed = true; onIntent(p.id); } };
+    card.addEventListener('pointerenter', warm);
+    card.addEventListener('focus', warm);
     list.appendChild(card);
   }
 

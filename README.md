@@ -269,6 +269,25 @@ every panel change. Holding all five would approach a gigabyte. The cost is a
 re-download and re-decode when returning to a panel, which the loading state
 covers.
 
+## Panel entry
+
+A panel's stems are ~12 MB, so entry does not block on them.
+
+The panel mounts immediately — images, caption, index and description are all
+usable within a couple of hundred milliseconds, and the meter falls back to
+showing each part's *intended* weights so the mechanic reads before a byte of
+audio has arrived. Stems load behind a thin progress line at the top edge, and
+when they land the mix jumps straight to whichever part the reader has stepped
+to, not back to the hero.
+
+Hovering or tabbing to a grid card fires a `<link rel="prefetch">` for that
+panel's stems — cache warming only, no decode, so no memory cost. Measured on a
+throttled 6 Mbit connection: cold click, panel on screen in 245 ms and sound at
+23.7 s; after ~1.8 s of hover, on screen in 62 ms and sound at 2.9 s.
+
+Leaving a panel before its audio lands is guarded by a load counter, so a slow
+response can never start playback into a panel the reader has already left.
+
 ## Publishing with real audio
 
 The repo is private and the use is academic, so the encoded stems (~59 MB) are

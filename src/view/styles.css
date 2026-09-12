@@ -192,10 +192,7 @@ body[data-reader=true] .prof{opacity:.2}
 .controls .back{margin-right:.25rem}
 
 
-/* ══════════════ panel loading ══════════════ */
-.loader{position:fixed;inset:0;z-index:20;display:grid;place-content:center;justify-items:center;
-  gap:1rem;background:var(--ground);text-align:center}
-.loader .what{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--muted);margin:0}
-.loader .bar{width:min(20rem,60vw);height:2px;background:var(--line);overflow:hidden}
-.loader .bar i{display:block;height:100%;width:0;background:var(--focus);transition:width 160ms linear}
+/* ══════════════ audio loading ══════════════ */
+/* The panel is already on screen; this only reports the stems arriving. */
+.loadline{position:fixed;top:0;left:0;right:0;height:2px;z-index:45;background:transparent;pointer-events:none}
+.loadline i{display:block;height:100%;width:0;background:var(--focus);transition:width 200ms linear}

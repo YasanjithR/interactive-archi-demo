@@ -43,6 +43,7 @@ const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v
   let audioOk = false;
   let paused = false;
   let live = null;                       // the mounted panel, or null on the grid
+  let loadSeq = 0;                       // guards audio landing after the reader moved on
 
   // ---------- panel host ----------
   const host = document.createElement('div');
@@ -50,18 +51,50 @@ const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v
   host.hidden = true;
   app.appendChild(host);
 
-  const grid = createGrid(app, index, base, id => openPanel(id, true));
+  const grid = createGrid(app, index, base, id => openPanel(id, true), warmPanel);
 
-  // entering a panel now downloads ~12 MB of real stems, so it needs a state
-  const loader = document.createElement('div');
-  loader.className = 'loader';
-  loader.hidden = true;
-  loader.innerHTML = '<p class="what"></p><div class="bar"><i></i></div>';
-  app.appendChild(loader);
-  const loadBar = loader.querySelector('i');
-  const loadWhat = loader.querySelector('.what');
-  const showLoader = t => { loadWhat.textContent = t; loadBar.style.width = '0%'; loader.hidden = false; };
-  const hideLoader = () => { loader.hidden = true; };
+  // A panel's stems are ~12 MB. The visuals must not wait for them, so audio
+  // loads in the background behind a thin progress line at the top edge.
+  const loadLine = document.createElement('div');
+  loadLine.className = 'loadline';
+  loadLine.hidden = true;
+  loadLine.innerHTML = '<i></i>';
+  app.appendChild(loadLine);
+  const loadBar = loadLine.querySelector('i');
+  const showLoader = () => { loadBar.style.width = '0%'; loadLine.hidden = false; };
+  const hideLoader = () => { loadLine.hidden = true; };
+
+  // panel.json is tiny; cache it so hover costs one small request, not a wait
+  const manifestCache = new Map();
+  async function getManifest(entry) {
+    if (!manifestCache.has(entry.id)) {
+      const pBase = new URL(entry.path, base);
+      const res = await fetch(pBase);
+      if (!res.ok) throw new Error(`${entry.path} — HTTP ${res.status}`);
+      manifestCache.set(entry.id, { panel: await res.json(), pBase });
+    }
+    return manifestCache.get(entry.id);
+  }
+
+  // Warm the browser's HTTP cache only — no decode, so no JS heap cost.
+  // configure() then finds the bytes already local and only has to decode.
+  const warmed = new Set();
+  async function warmPanel(id) {
+    if (warmed.has(id)) return;
+    warmed.add(id);
+    const entry = index.panels.find(p => p.id === id);
+    if (!entry) return;
+    try {
+      const { panel, pBase } = await getManifest(entry);
+      for (const c of panel.audio.channels) {
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.as = 'audio';
+        link.href = new URL(c.src, pBase).href;
+        document.head.appendChild(link);
+      }
+    } catch (e) { warmed.delete(id); }
+  }
 
   // ---------- profile switch (global — survives panel changes) ----------
   const prof = document.createElement('div');
@@ -119,7 +152,11 @@ const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v
 
   // ---------- mount / unmount a panel ----------
   function unmountPanel() {
+    loadSeq++;
     engine.stop();
+    // the next panel has no audio until its own stems land — without this the
+    // meter stays blank instead of falling back to showing intended weights
+    audioOk = false;
     host.innerHTML = '';
     host.hidden = true;
     prof.hidden = true;
@@ -136,15 +173,12 @@ const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v
     unmountPanel();
     grid.hide();
     setState('loading-panel');
-    showLoader(`Loading ${entry.title}`);
 
-    const pBase = new URL(entry.path, base);
-    let panel;
-    try {
-      const res = await fetch(pBase);
-      if (!res.ok) throw new Error(`${entry.path} — HTTP ${res.status}`);
-      panel = await res.json();
-    } catch (e) { hideLoader(); notice(`Could not load ${entry.title}`); backToGrid(); return; }
+    const seq = ++loadSeq;
+    let panel, pBase;
+    try { ({ panel, pBase } = await getManifest(entry)); }
+    catch (e) { notice(`Could not load ${entry.title}`); backToGrid(); return; }
+    if (seq !== loadSeq) return;
 
     document.documentElement.style.setProperty('--tau', `${(panel.audio.tau ?? 0.3) * 1000}ms`);
 
@@ -202,20 +236,27 @@ const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v
       if (audioOk && !paused) nudge();
     });
 
-    try {
-      await engine.configure(panel, pBase, p => { loadBar.style.width = (p * 100).toFixed(0) + '%'; });
-      await engine.start();
-      audioOk = true;
-    } catch (e) {
-      audioOk = false;
-      notice('Sound unavailable — images and text only');
-    }
-    hideLoader();
-
+    // Visuals first: the panel is usable and readable before a byte of audio
+    // has arrived. apply() falls back to showing intended weights on the meter
+    // while audioOk is false, so the mechanic is legible immediately.
     setState('running');
     document.body.dataset.screen = 'panel';
     nav.go(0, 'init');
-    nudge();
+
+    showLoader();
+    engine.configure(panel, pBase, p => { loadBar.style.width = (p * 100).toFixed(0) + '%'; })
+      .then(() => {
+        if (seq !== loadSeq) { engine.stop(); return; }   // reader left before it landed
+        return engine.start();
+      })
+      .then(() => {
+        if (seq !== loadSeq) return;
+        audioOk = true;
+        apply(nav.index);          // catch up to wherever they stepped meanwhile
+        nudge();
+      })
+      .catch(() => { if (seq === loadSeq) notice('Sound unavailable — images and text only'); })
+      .finally(() => { if (seq === loadSeq) hideLoader(); });
 
     const missing = stage.failures();
     if (missing) notice(`${missing} image${missing > 1 ? 's' : ''} failed to load`);
