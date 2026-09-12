@@ -271,15 +271,15 @@ covers.
 
 ## Publishing with real audio
 
-The stems are gitignored by default. A private academic demo is one thing;
-putting separated commercial recordings on a public URL is distribution, and git
-history is not easily undone.
+The repo is private and the use is academic, so the encoded stems (~59 MB) are
+tracked. The raw 1.1 GB `STEMS/` exports are not — keep those backed up
+elsewhere; they are only needed to re-run `encode_stems.sh`.
 
-- **Presenting from your laptop** — nothing to do. `npm start` uses the local
-  stems and everything works.
-- **Sharing a link** — make the GitHub repo **private**, delete the
-  `content/*/stems/` lines from `.gitignore`, and put the Cloudflare site behind
-  **Cloudflare Access** (Zero Trust → Access → Applications) with an email
-  one-time-code policy for your assessors.
-- **Leaving it gitignored and deploying anyway** — the site loads and reads
-  correctly but enters its no-sound state, since the stems 404.
+**A private repo does not make the deployed site private.** Cloudflare Pages
+serves whatever it builds to a public URL regardless of the repo's visibility,
+so the recordings would be publicly fetchable from `.pages.dev`.
+
+If that matters, put the site behind **Cloudflare Access** — Zero Trust → Access
+→ Applications, with an email one-time-code policy listing your assessors. It
+takes a couple of minutes and keeps the link shareable with exactly the people
+who need it.
