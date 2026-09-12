@@ -1,6 +1,10 @@
 {
   "title": "Reweave Cremorne",
   "subtitle": "Five spaces, five songs. Each one built from the parts of its score — step through and hear which element produced what you are looking at.",
+  "gate": {
+    "kicker": "Architectural atmosphere, translated from music",
+    "title": "Designing with Music"
+  },
   "panels": [
     {
       "id": "reweave-exterior",

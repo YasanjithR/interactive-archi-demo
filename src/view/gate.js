@@ -3,11 +3,11 @@
 export function createGate(root, panel, onEnter) {
   const el = document.createElement('div');
   el.className = 'gate';
+  const g = panel.gate || {};
   el.innerHTML = `
     <div class="inner">
-      <p class="kicker">${panel.kicker || 'Five spaces, five songs'}</p>
-      <h1>${panel.title}</h1>
-      <p>${panel.subtitle || ''}</p>
+      <p class="kicker">${g.kicker || panel.kicker || ''}</p>
+      <h1>${g.title || panel.title}</h1>
       <button class="enter" type="button">Enter</button>
       <div class="bar"><i></i></div>
       <p class="hint">Headphones recommended · sound starts on entry</p>
