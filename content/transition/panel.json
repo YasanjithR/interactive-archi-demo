@@ -35,6 +35,12 @@
         "label": "Vocals",
         "src": "stems/vocals.mp3",
         "trim": 1.0
+      },
+      {
+        "id": "rhythm2",
+        "label": "Rhythm 2",
+        "src": "stems/rhythm2.mp3",
+        "trim": 1.0
       }
     ]
   },
@@ -50,7 +56,8 @@
       "image": "images/01-structure.jpg",
       "focus": [
         "drums",
-        "bass"
+        "bass",
+        "rhythm2"
       ],
       "body": "The song's rhythmic structure and long, sustained chords are translated into the building's concrete framework and V-shaped columns.\n\nThe repeated xylophone-like notes, which follow a melodic zigzag progression, are expressed through the angular rhythm of the V-columns. In contrast, the sustained chords are represented by the horizontal concrete floor slabs, which hold the composition together as a continuous structural foundation."
     },

@@ -69,7 +69,10 @@
       "label": "Colour and Creativity",
       "image": "images/03-colour.jpg",
       "focus": "vocals",
-      "body": "The song's colourful and playful character is expressed through the designers, garments and textiles occupying the workshop. Rather than applying colour permanently to the architecture, it is introduced through creative activity and constantly changing materials.\n\nAs new designers and projects move through the space, its colours and visual identity continue to evolve, transforming the concrete structure into a living kaleidoscope of sustainable fashion."
+      "body": "The song's colourful and playful character is expressed through the designers, garments and textiles occupying the workshop. Rather than applying colour permanently to the architecture, it is introduced through creative activity and constantly changing materials.\n\nAs new designers and projects move through the space, its colours and visual identity continue to evolve, transforming the concrete structure into a living kaleidoscope of sustainable fashion.",
+      "mix": {
+        "synths": 0.5
+      }
     }
   ]
 }

@@ -10,7 +10,11 @@ export function createCaption(root, channels) {
       h2.textContent = node.label;
       if (node.hero) { stem.textContent = 'all stems at full'; return; }
       const front = [].concat(node.focus || []).map(id => (channels.find(c => c.id === id) || {}).label || id);
-      stem.innerHTML = front.length ? `driven by <b>${front.join(' + ')}</b>` : '';
+      // A section can deliberately have nothing in front — Common Ground's
+      // minor-key part holds all three elements at half. `note` covers that
+      // case so the line reads as intent rather than as a missing value.
+      if (front.length) stem.innerHTML = `driven by <b>${front.join(' + ')}</b>`;
+      else stem.textContent = node.note || '';
     }
   };
 }

@@ -42,28 +42,33 @@
       "id": "structural-walls",
       "label": "Rhythmic Structural Walls",
       "image": "images/01-structural-walls.jpg",
-      "focus": "chords",
-      "mix": {
-        "bass": 0.5
-      },
+      "focus": [
+        "chords",
+        "bass"
+      ],
       "body": "The rhythmic structure of the song is represented by accented sustained chords instead of the use of percussion. This maintains the heaviness of the song.\n\nSimilarly I have created rhythmic structural walls to give a sense of heaviness to the space."
     },
     {
       "id": "exposed-concrete",
       "label": "The Minor Key, in Concrete",
       "image": "images/02-concrete.jpg",
-      "focus": "bass",
       "body": "The song's melodic structure is in a minor key. In the world of music the minor key is known for creating sad, dark and grey melancholic emotions within a song.\n\nAs an architectural intervention, I have used exposed concrete for this space as the main material. The combination of concrete and heavy structural walls creates a dark atmosphere within the space.",
       "mix": {
-        "chords": 0.45
-      }
+        "bass": 0.5,
+        "chords": 0.5,
+        "vocals": 0.5
+      },
+      "note": "all three elements held at half"
     },
     {
       "id": "monumental-volume",
       "label": "Reverberation and Scale",
       "image": "images/03-monumental.jpg",
       "focus": "chords",
-      "body": "This song also has well defined reverberations and echoes, which enhance the emotional depth of the song.\n\nI was able to achieve this emotional depth around the atmosphere of this space by creating a double-heighted, monumental scale throughout the common ground."
+      "body": "This song also has well defined reverberations and echoes, which enhance the emotional depth of the song.\n\nI was able to achieve this emotional depth around the atmosphere of this space by creating a double-heighted, monumental scale throughout the common ground.",
+      "mix": {
+        "vocals": 0.5
+      }
     },
     {
       "id": "mirrored-ceiling",

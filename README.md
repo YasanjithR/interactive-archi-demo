@@ -251,15 +251,29 @@ Trims are all `1.0`. These are true stems from one mix, so they already sum back
 to the original: "all weights at 1.0" reconstructs the track, and correcting
 levels would break that.
 
-### Three problems in the supplied exports
+### Notes on the supplied exports
 
 | | |
 |---|---|
 | `Track 1` in every song | Completely silent (−91 dB). Not the full mix — an empty track. Ignored. |
 | `SOLITUDE / Drums` | Silent across all 222 s. **Common Ground runs on three stems**, not four. |
-| `INNERBLOOM / Instruments` | Truncated to 20 s of a 253 s song. `Track 6` is full length and healthy, so that is used as the synth stem. |
+| `INNERBLOOM / Instruments` | Only 20 s long — **deliberately**, not truncated: it is the opening xylophone motif. `Track 6` is the full-length synth stem; the 20 s file is padded with silence to match and carried as a fifth channel, `Rhythm 2`. |
 
 Re-export any of these and re-run `encode_stems.sh` to fix.
+
+### Padding a short stem
+
+A stem that covers only part of the song is padded with silence to the exact
+common length rather than looped:
+
+```bash
+ffmpeg -i "Project_1 - Instruments.wav" -af apad -t 253.725193 \
+  -ac 1 -ar 44100 -c:a libmp3lame -b:a 96k content/transition/stems/rhythm2.mp3
+```
+
+It then sounds across the song's first 20 s and falls silent, staying correctly
+positioned on every loop. Looping it instead would repeat the motif twelve times
+over a track that only states it once.
 
 ### Memory
 

@@ -73,12 +73,9 @@
       "label": "Light and Hope",
       "image": "images/04-light.jpg",
       "focus": [
-        "drums",
-        "synths"
+        "synths",
+        "vocals"
       ],
-      "mix": {
-        "vocals": 0.5
-      },
       "body": "The song's electrifying atmosphere is expressed through the light emerging from the façade openings.\n\nAgainst the heavy concrete mass, this illumination becomes a symbol of hope and transformation. It represents the possibility of a more sustainable future, where fashion can support positive environmental and social change."
     }
   ]
