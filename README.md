@@ -283,31 +283,6 @@ every panel change. Holding all five would approach a gigabyte. The cost is a
 re-download and re-decode when returning to a panel, which the loading state
 covers.
 
-## Re-cue on arrival
-
-**Arriving at a sub-component restarts every stem from zero.** Each part is
-therefore heard against the same opening material, rather than against whatever
-the song happened to be doing when you got there.
-
-This is a deliberate reversal. The design originally held that navigation
-controlled the *mix* and never the *transport* — the song ran on its own clock
-and stepping only re-balanced it. That is no longer true, and the trade is
-worth naming: you lose the sense of one continuous piece developing underneath,
-and you gain that every part reliably presents its own material from the top.
-
-It is what makes Transition's `Rhythm 2` work at all: the motif only exists in
-the song's first 20 seconds, so without a re-cue you would only ever hear it by
-reaching that part quickly enough.
-
-The splice is not a hard cut. `engine.restart()` dips the master to near
-silence over 80 ms, stops and rebuilds every source against one shared
-timestamp, then brings the master back over 80 ms. Cutting mid-waveform with
-the gains open clicks; with five stems cutting at once it thumps. All sources
-still start on an identical `t0`, so they stay sample-accurate to each other.
-
-Rapid stepping is safe — each call cancels the previous master automation and
-re-aims — and pausing mid-splice recovers correctly on resume.
-
 ## Panel entry
 
 A panel's stems are ~12 MB, so entry does not block on them.

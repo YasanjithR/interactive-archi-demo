@@ -103,38 +103,6 @@ export class AudioEngine {
     this.startedAt = t0;
   }
 
-  /** Restart every stem from zero, spliced cleanly.
-
-      Sources are single-use, so this builds fresh ones. The master is dipped
-      to near-silence across the splice: cutting mid-waveform with the gains
-      open produces a very audible click, and with four or five stems cutting
-      at once it is a thump. ~80 ms down, restart, ~80 ms back up — reads as a
-      deliberate re-cue rather than a glitch. */
-  restart() {
-    if (!this.ready) return;
-    const ctx = this.ctx;
-    const now = ctx.currentTime;
-    const DIP = 0.08;
-    const t0  = now + DIP + 0.02;
-
-    const g = this.master.gain;
-    g.cancelScheduledValues(now);              // a rapid second press re-aims cleanly
-    g.setValueAtTime(Math.max(g.value, 1e-4), now);
-    g.exponentialRampToValueAtTime(1e-4, now + DIP);
-
-    for (const c of this.channels) {
-      try { c.source && c.source.stop(t0); } catch (e) {}
-      const src = ctx.createBufferSource();
-      src.buffer = c.buffer;
-      src.loop = this.loop;
-      src.connect(c.gain);
-      src.start(t0);                           // same t0 for all — still sample-accurate
-      c.source = src;
-    }
-    this.startedAt = t0;
-    g.exponentialRampToValueAtTime(1, t0 + DIP);
-  }
-
   stop() {
     for (const c of this.channels) {
       try { c.source && c.source.stop(); } catch (e) {}

@@ -224,7 +224,7 @@ const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v
 
     live = { id, panel, nodes, channelIds, trims, nav, stage, caption, reader, hud, btnPause, btnRead, parts };
 
-    nav.onChange((node, i, cause) => {
+    nav.onChange((node, i) => {
       stage.setActive(i);
       caption.set(node, i, parts);
       reader.set(node, i, parts);
@@ -232,10 +232,6 @@ const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v
       btnPrev.disabled = nav.atStart;
       btnNext.disabled = nav.atEnd;
       setHash(id, node.hero ? null : node.id);
-      // Every arrival re-cues the track from zero, so each part is heard
-      // against the same opening material. 'init' is skipped: start() has
-      // just begun playback at zero already.
-      if (audioOk && cause !== 'init') engine.restart();
       apply(i);
       if (audioOk && !paused) nudge();
     });
