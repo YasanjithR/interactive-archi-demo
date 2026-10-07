@@ -8,6 +8,7 @@ import { createHud } from './view/hud.js';
 import { createReader } from './view/reader.js';
 import { createGate } from './view/gate.js';
 import { createGrid } from './view/grid.js';
+import { createArchive } from './view/archive.js';
 
 const INDEX = 'content/panels.json';
 const app = document.getElementById('app');
@@ -52,6 +53,47 @@ const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v
   app.appendChild(host);
 
   const grid = createGrid(app, index, base, id => openPanel(id, true), warmPanel);
+
+  // ── Archive tab ──────────────────────────────────────────────────────────
+  // The home screen carries two panes under one header: the five spaces, and
+  // the documents behind them. Loaded lazily — nothing is fetched until the
+  // tab is first opened.
+  let archive = null, archiveData = null;
+  const panelsPane = grid.el.querySelector('.grid');
+
+  const tabs = document.createElement('div');
+  tabs.className = 'tabs';
+  tabs.setAttribute('role', 'tablist');
+  const tabBtns = {};
+  for (const [key, label] of [['panels', 'Panels'], ['archive', 'Archive']]) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'tab';
+    b.textContent = label;
+    b.setAttribute('role', 'tab');
+    b.setAttribute('aria-selected', String(key === 'panels'));
+    b.addEventListener('click', () => showTab(key, true));
+    tabs.appendChild(b);
+    tabBtns[key] = b;
+  }
+  grid.el.querySelector('.grid-head').after(tabs);
+
+  async function showTab(key, pushHash) {
+    for (const [k, b] of Object.entries(tabBtns)) b.setAttribute('aria-selected', String(k === key));
+    panelsPane.hidden = key !== 'panels';
+    if (key === 'archive') {
+      if (!archive) {
+        try {
+          const aBase = new URL('archive/archive.json', base);
+          archiveData = await (await fetch(aBase)).json();
+          archive = createArchive(grid.el, app, archiveData, aBase);
+        } catch (e) { notice('Could not load the archive'); showTab('panels'); return; }
+      }
+      archive.show();
+    } else if (archive) archive.hide();
+    if (pushHash) history.replaceState(null, '', key === 'archive' ? '#/archive' : location.pathname);
+    grid.el.scrollTop = 0;
+  }
 
   // A panel's stems are ~12 MB. The visuals must not wait for them, so audio
   // loads in the background behind a thin progress line at the top edge.
@@ -169,6 +211,7 @@ const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v
   async function openPanel(id, pushHash) {
     const entry = index.panels.find(p => p.id === id);
     if (!entry) return;
+    if (archive) archive.hide();
 
     unmountPanel();
     grid.hide();
@@ -317,6 +360,7 @@ const ICON_PLAY  = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v
     onProgress(1);
     gate.dismiss();
     const { panel, section } = parseHash();
+    if (panel === 'archive') { grid.show(); setState('grid'); showTab('archive', false); return; }
     if (panel && index.panels.some(p => p.id === panel)) {
       await openPanel(panel, false);
       if (section && live) live.nav.goId(section, 'hash');

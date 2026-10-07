@@ -20,3 +20,7 @@ node_modules/
 # Leading slash matters: macOS matches paths case-insensitively, so an
 # unanchored "STEMS/" also swallows content/*/stems/.
 /STEMS/
+
+# Source PDFs and video as delivered — 363 MB, superseded by content/archive/.
+# Anchored: an unanchored name matches at any depth (see the STEMS note above).
+/content/pdfs/

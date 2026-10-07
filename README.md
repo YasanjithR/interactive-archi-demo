@@ -283,6 +283,55 @@ every panel change. Holding all five would approach a gigabyte. The cost is a
 re-download and re-decode when returning to a panel, which the loading state
 covers.
 
+## The Archive tab
+
+The home screen carries two tabs: **Panels** (the five spaces) and **Archive**
+(the drawings, writing and film behind them). The archive is lazy — nothing is
+fetched until the tab is first opened. `#/archive` deep-links to it.
+
+Three viewers behind one overlay:
+
+| Kind | Viewer |
+|---|---|
+| `pdf` | the browser's own PDF viewer in an iframe — no library, works offline |
+| `video` | a `<video>` with VP9/WebM and H.264/MP4 sources |
+| `wall` | the three presentation boards hung end to end |
+
+### The wall
+
+The three Masterclass boards share a height and were made to be pinned side by
+side, so they are not a folder of three PDFs. They are shown as one continuous
+**21,610 × 2,186 px** strip you drag along, with a scrubber marking which board
+you are in front of and a zoom for reading board text. A folder would have lost
+the only thing that makes them a set. The individual PDFs are still one click
+away in the toolbar.
+
+Each board is sliced into segments no wider than 4,200 px so no single image
+decode exceeds ~10 MP — board 02 alone is 12,348 px wide.
+
+### Preparing archive assets
+
+Originals live in `content/pdfs/` (gitignored — 363 MB) and are processed into
+`content/archive/`:
+
+```bash
+bash tools/flatten_pdf.sh "content/pdfs/AT 01.pdf" \
+     content/archive/docs/process-portfolio.pdf 120 72
+```
+
+**Why rasterise rather than downsample?** Ghostscript leaves images with soft
+masks at full resolution — `AT 01.pdf` went 47 MB → 41 MB and no further, at
+any dpi. Rasterising trades text selection for a predictable size, which is the
+right trade for visual portfolios: 47 MB → 6.1 MB.
+
+Totals: the seven source files are **363 MB**, five of them over Cloudflare's
+25 MiB per-asset limit. Processed, the whole archive is **44 MB** with nothing
+over 17 MB.
+
+The film ships twice, VP9 first. H.264 is absent from Chromium builds without
+the licensed decoder — the same gap that forced the stems to MP3 — so the
+browser picks whichever it can decode.
+
 ## Panel entry
 
 A panel's stems are ~12 MB, so entry does not block on them.

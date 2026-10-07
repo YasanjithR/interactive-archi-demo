@@ -1,0 +1,126 @@
+{
+  "title": "Archive",
+  "subtitle": "The drawings, writing and film behind the five spaces.",
+  "items": [
+    {
+      "id": "research-portfolio",
+      "title": "Research Portfolio",
+      "kind": "pdf",
+      "meta": "44 pages",
+      "size": "8.3 MB",
+      "cover": "covers/research-portfolio.jpg",
+      "src": "docs/research-portfolio.pdf",
+      "blurb": "The written research behind Reweave Cremorne — the fast-fashion argument the building is answering."
+    },
+    {
+      "id": "cremorne-masterplan",
+      "title": "Cremorne Masterplan",
+      "kind": "pdf",
+      "meta": "A1 sheet",
+      "size": "1.8 MB",
+      "cover": "covers/cremorne-masterplan.jpg",
+      "src": "docs/cremorne-masterplan.pdf",
+      "blurb": "The site at city scale: how the building sits in Cremorne and what it reorganises around it."
+    },
+    {
+      "id": "process-portfolio",
+      "title": "Process Portfolio",
+      "kind": "pdf",
+      "meta": "34 pages",
+      "size": "6.0 MB",
+      "cover": "covers/process-portfolio.jpg",
+      "src": "docs/process-portfolio.pdf",
+      "blurb": "Iteration, testing and the dead ends — how the five spaces arrived at their final form."
+    },
+    {
+      "id": "presentation-boards",
+      "title": "Presentation Boards",
+      "kind": "wall",
+      "meta": "3 boards · 21,610 px wide",
+      "size": "5.1 MB",
+      "cover": "covers/presentation-boards.jpg",
+      "boards": [
+        {
+          "label": "01",
+          "pdf": "docs/board-01.pdf",
+          "w": 4631,
+          "h": 2186,
+          "segments": [
+            {
+              "src": "boards/b01-1.jpg",
+              "w": 2316,
+              "h": 2186
+            },
+            {
+              "src": "boards/b01-2.jpg",
+              "w": 2315,
+              "h": 2186
+            }
+          ]
+        },
+        {
+          "label": "02",
+          "pdf": "docs/board-02.pdf",
+          "w": 12348,
+          "h": 2186,
+          "segments": [
+            {
+              "src": "boards/b02-1.jpg",
+              "w": 4116,
+              "h": 2186
+            },
+            {
+              "src": "boards/b02-2.jpg",
+              "w": 4116,
+              "h": 2186
+            },
+            {
+              "src": "boards/b02-3.jpg",
+              "w": 4116,
+              "h": 2186
+            }
+          ]
+        },
+        {
+          "label": "03",
+          "pdf": "docs/board-03.pdf",
+          "w": 4631,
+          "h": 2186,
+          "segments": [
+            {
+              "src": "boards/b03-1.jpg",
+              "w": 2316,
+              "h": 2186
+            },
+            {
+              "src": "boards/b03-2.jpg",
+              "w": 2315,
+              "h": 2186
+            }
+          ]
+        }
+      ],
+      "blurb": "The three final boards, hung end to end as they would be at a crit. Drag to walk along the wall."
+    },
+    {
+      "id": "film",
+      "title": "Project Film",
+      "kind": "video",
+      "meta": "0:56 · 1080p",
+      "size": "16.1 MB",
+      "cover": "covers/film.jpg",
+      "poster": "film/poster.jpg",
+      "blurb": "A short walkthrough of the building and its spaces.",
+      "sources": [
+        {
+          "src": "film/reweave.webm",
+          "type": "video/webm; codecs=\"vp9, opus\""
+        },
+        {
+          "src": "film/reweave.mp4",
+          "type": "video/mp4; codecs=\"avc1.640028, mp4a.40.2\""
+        }
+      ]
+    }
+  ]
+}
