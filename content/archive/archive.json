@@ -5,32 +5,436 @@
     {
       "id": "research-portfolio",
       "title": "Research Portfolio",
-      "kind": "pdf",
+      "kind": "pages",
       "meta": "44 pages",
       "size": "8.3 MB",
       "cover": "covers/research-portfolio.jpg",
-      "src": "docs/research-portfolio.pdf",
-      "blurb": "The written research behind Reweave Cremorne — the fast-fashion argument the building is answering."
+      "blurb": "The written research behind Reweave Cremorne — the fast-fashion argument the building is answering.",
+      "pages": [
+        {
+          "src": "pages/research-portfolio/001.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/002.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/003.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/004.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/005.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/006.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/007.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/008.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/009.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/010.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/011.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/012.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/013.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/014.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/015.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/016.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/017.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/018.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/019.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/020.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/021.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/022.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/023.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/024.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/025.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/026.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/027.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/028.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/029.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/030.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/031.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/032.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/033.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/034.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/035.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/036.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/037.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/038.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/039.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/040.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/041.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/042.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/043.jpg",
+          "w": 1654,
+          "h": 1170
+        },
+        {
+          "src": "pages/research-portfolio/044.jpg",
+          "w": 1654,
+          "h": 1170
+        }
+      ],
+      "pdf": "docs/research-portfolio.pdf",
+      "single": false
     },
     {
       "id": "cremorne-masterplan",
       "title": "Cremorne Masterplan",
-      "kind": "pdf",
+      "kind": "pages",
       "meta": "A1 sheet",
       "size": "1.8 MB",
       "cover": "covers/cremorne-masterplan.jpg",
-      "src": "docs/cremorne-masterplan.pdf",
-      "blurb": "The site at city scale: how the building sits in Cremorne and what it reorganises around it."
+      "blurb": "The site at city scale: how the building sits in Cremorne and what it reorganises around it.",
+      "pages": [
+        {
+          "src": "pages/cremorne-masterplan/001.jpg",
+          "w": 2574,
+          "h": 3643
+        }
+      ],
+      "pdf": "docs/cremorne-masterplan.pdf",
+      "single": true
     },
     {
       "id": "process-portfolio",
       "title": "Process Portfolio",
-      "kind": "pdf",
+      "kind": "pages",
       "meta": "34 pages",
       "size": "6.0 MB",
       "cover": "covers/process-portfolio.jpg",
-      "src": "docs/process-portfolio.pdf",
-      "blurb": "Iteration, testing and the dead ends — how the five spaces arrived at their final form."
+      "blurb": "Iteration, testing and the dead ends — how the five spaces arrived at their final form.",
+      "pages": [
+        {
+          "src": "pages/process-portfolio/001.jpg",
+          "w": 828,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/002.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/003.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/004.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/005.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/006.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/007.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/008.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/009.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/010.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/011.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/012.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/013.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/014.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/015.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/016.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/017.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/018.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/019.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/020.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/021.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/022.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/023.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/024.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/025.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/026.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/027.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/028.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/029.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/030.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/031.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/032.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/033.jpg",
+          "w": 1655,
+          "h": 1170
+        },
+        {
+          "src": "pages/process-portfolio/034.jpg",
+          "w": 1655,
+          "h": 1170
+        }
+      ],
+      "pdf": "docs/process-portfolio.pdf",
+      "single": false
     },
     {
       "id": "presentation-boards",

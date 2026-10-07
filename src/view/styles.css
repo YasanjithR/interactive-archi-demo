@@ -231,7 +231,7 @@ body[data-reader=true] .prof{opacity:.2}
   font-family:var(--f-mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 
 /* ══════════════ document viewer ══════════════ */
-.arc-viewer{position:fixed;inset:0;z-index:60;display:grid;grid-template-rows:auto 1fr;
+.arc-viewer{position:fixed;inset:0;z-index:60;display:grid;grid-template-rows:auto minmax(0,1fr);
   background:var(--ground)}
 .arc-viewer[hidden]{display:none}
 .arc-bar{display:flex;align-items:center;gap:1rem;padding:.7rem clamp(.9rem,2vw,1.5rem);
@@ -248,12 +248,12 @@ body[data-reader=true] .prof{opacity:.2}
 .arc-close{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;
   color:var(--muted);padding:.42rem .6rem}
 .arc-close:hover{color:var(--focus)}
-.arc-stage{position:relative;display:grid;grid-template-rows:1fr;min-height:0;background:var(--panel-2)}
+.arc-stage{position:relative;display:grid;grid-template-rows:minmax(0,1fr);min-height:0;background:var(--panel-2)}
 .arc-frame{width:100%;height:100%;border:0;background:var(--panel-2)}
 .arc-video{width:100%;height:100%;object-fit:contain;background:#0b0d10;display:block}
 
 /* ══════════════ the wall ══════════════ */
-.arc-stage:has(.wall){grid-template-rows:1fr auto}
+.arc-stage:has(.wall){grid-template-rows:minmax(0,1fr) auto}
 .wall{overflow-x:auto;overflow-y:hidden;height:100%;background:var(--panel-2);
   cursor:grab;scrollbar-width:thin;overscroll-behavior-x:contain}
 .wall[data-drag]{cursor:grabbing;scroll-behavior:auto}
@@ -279,4 +279,38 @@ body[data-reader=true] .prof{opacity:.2}
 @media (max-width:760px){
   .arc-bar-title{font-size:.9rem}
   .arc-tool{padding:.38rem .6rem;font-size:.6rem}
+}
+
+/* ══════════════ page reader (documents) ══════════════ */
+.arc-count{font-family:var(--f-mono);font-size:.62rem;letter-spacing:.1em;color:var(--muted);
+  padding:.42rem .2rem;min-width:4.2rem;text-align:right;font-variant-numeric:tabular-nums}
+
+.arc-reader{position:relative;overflow:auto;height:100%;background:var(--panel-2);
+  scrollbar-width:thin;overscroll-behavior:contain}
+.arc-reader-col{display:flex;flex-direction:column;align-items:center;
+  gap:clamp(.75rem,1.6vw,1.4rem);padding:clamp(.75rem,2vw,1.75rem);width:100%}
+.arc-page{position:relative;background:var(--panel);flex:none;
+  box-shadow:0 1px 2px rgba(12,14,17,.08),0 8px 28px rgba(12,14,17,.10)}
+.arc-page img{display:block;width:100%;height:100%;object-fit:contain;
+  user-select:none;-webkit-user-drag:none}
+
+/* continuous reading — comfortable measure, vertical scroll only */
+.arc-reader[data-mode=read] .arc-page{width:min(100%,62rem);height:auto}
+/* Whole sheet in view, nothing to scroll. The column collapses to
+   display:contents so the page becomes the grid item itself — a percentage
+   max-height then resolves against the grid area, which is definite.
+   Against the column it is not, and the sheet silently falls back to its
+   intrinsic width. */
+.arc-reader[data-mode=fit]{display:grid;grid-template:minmax(0,1fr)/minmax(0,1fr);
+  place-items:center;overflow:hidden;padding:clamp(.75rem,2vw,1.75rem)}
+.arc-reader[data-mode=fit] .arc-reader-col{display:contents}
+.arc-reader[data-mode=fit] .arc-page{height:100%;width:auto;max-width:100%}
+/* zoomed — overflow both ways, drag the scrollbars */
+.arc-reader[data-mode=full] .arc-reader-col{width:max-content;min-width:100%}
+.arc-reader[data-mode=full] .arc-page{width:max(100vw - 3.5rem,84rem);height:auto}
+
+@media (max-width:760px){
+  .arc-count{min-width:3.4rem;font-size:.58rem}
+  .arc-reader-col{padding:.5rem;gap:.5rem}
+  .arc-reader[data-mode=read] .arc-page{width:100%}
 }

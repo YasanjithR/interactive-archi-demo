@@ -293,9 +293,37 @@ Three viewers behind one overlay:
 
 | Kind | Viewer |
 |---|---|
-| `pdf` | the browser's own PDF viewer in an iframe — no library, works offline |
+| `pages` | the document as page images in a continuous scroll — no PDF plugin |
 | `video` | a `<video>` with VP9/WebM and H.264/MP4 sources |
 | `wall` | the three presentation boards hung end to end |
+
+### Why page images and not a PDF
+
+The first build put each PDF in an `<iframe>` and let the browser render it.
+On a machine with Chrome's **"Download PDFs instead of automatically opening
+them"** switched on, that iframe is blank and the file lands in Downloads —
+the viewer opens onto nothing. The setting is per-user and per-machine, so the
+crit laptop decides whether the archive works, which is not a bet worth taking.
+
+Each document is now rasterised to page JPEGs (`tools/make_pages.sh`) and
+listed in `archive.json` with its pixel size, which goes onto the page wrapper
+as an `aspect-ratio` so the full scroll height is correct before a single image
+has loaded. The first two pages load eagerly, the rest lazily. The original PDF
+is still one click away in the toolbar as a download.
+
+Two sizes, toggled from the toolbar: a comfortable 62 rem column for reading,
+and full window width for detail. A one-page sheet (the A1 masterplan) starts
+whole-page instead, because a plan read a column at a time is not a plan.
+
+| Document | Pages | Size |
+|---|---|---|
+| Research Portfolio | 44 | 6.3 MB |
+| Process Portfolio | 34 | 4.5 MB |
+| Cremorne Masterplan | 1 | 1.6 MB |
+
+The page counter is plain `scrollTop` arithmetic against each page's
+`offsetTop`, coalesced to a frame — not an `IntersectionObserver`. Same answer,
+no threshold tuning, and one pass over 44 offsets costs nothing.
 
 ### The wall
 
@@ -325,8 +353,9 @@ any dpi. Rasterising trades text selection for a predictable size, which is the
 right trade for visual portfolios: 47 MB → 6.1 MB.
 
 Totals: the seven source files are **363 MB**, five of them over Cloudflare's
-25 MiB per-asset limit. Processed, the whole archive is **44 MB** with nothing
-over 17 MB.
+25 MiB per-asset limit. Processed, `content/archive/` is **68 MB** with nothing
+over 18 MB: 29 MB film (shipped twice), 21 MB download PDFs, 13 MB page images,
+5 MB boards.
 
 The film ships twice, VP9 first. H.264 is absent from Chromium builds without
 the licensed decoder — the same gap that forced the stems to MP3 — so the

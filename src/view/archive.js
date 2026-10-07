@@ -61,7 +61,7 @@ export function createArchive(paneRoot, overlayRoot, data, base, { onBusy } = {}
   const stage    = ov.querySelector('.arc-stage');
   let opener = null, cleanup = null;
 
-  function badge(k) { return k === 'video' ? 'Film' : k === 'wall' ? 'Boards' : 'PDF'; }
+  function badge(k) { return k === 'video' ? 'Film' : k === 'wall' ? 'Boards' : 'Document'; }
 
   function open(it) {
     opener = document.activeElement;
@@ -70,7 +70,7 @@ export function createArchive(paneRoot, overlayRoot, data, base, { onBusy } = {}
     stage.innerHTML = '';
     if (cleanup) { cleanup(); cleanup = null; }
 
-    if (it.kind === 'pdf')        cleanup = mountPdf(it);
+    if (it.kind === 'pages')      cleanup = mountPages(it);
     else if (it.kind === 'video') cleanup = mountVideo(it);
     else if (it.kind === 'wall')  cleanup = mountWall(it);
 
@@ -89,20 +89,84 @@ export function createArchive(paneRoot, overlayRoot, data, base, { onBusy } = {}
     if (opener && opener.focus) opener.focus();
   }
 
-  // ── pdf ──────────────────────────────────────────────────────────────────
-  function mountPdf(it) {
-    const url = new URL(it.src, base).href;
-    const a = document.createElement('a');
-    a.className = 'arc-tool';
-    a.href = url; a.target = '_blank'; a.rel = 'noopener';
-    a.textContent = 'Open in new tab';
-    barTools.appendChild(a);
-    const f = document.createElement('iframe');
-    f.className = 'arc-frame';
-    f.title = it.title;
-    f.src = url + '#view=FitH';
-    stage.appendChild(f);
-    return () => { f.src = 'about:blank'; };
+  // ── paged document ───────────────────────────────────────────────────────
+  // Not an <iframe> of the PDF. Chrome has a setting that downloads PDFs
+  // rather than opening them, and iOS Safari frequently refuses to render one
+  // in a frame — both give a blank overlay. Page images always render.
+  function mountPages(it) {
+    const dl = document.createElement('a');
+    dl.className = 'arc-tool quiet';
+    dl.href = new URL(it.pdf, base).href;
+    dl.download = '';
+    dl.textContent = 'Download PDF';
+
+    const zoomBtn = document.createElement('button');
+    zoomBtn.type = 'button';
+    zoomBtn.className = 'arc-tool';
+
+    const count = document.createElement('span');
+    count.className = 'arc-count';
+
+    barTools.append(count, zoomBtn, dl);
+
+    const wrap = document.createElement('div');
+    wrap.className = 'arc-reader';
+    const col = document.createElement('div');
+    col.className = 'arc-reader-col';
+
+    const imgs = it.pages.map((pg, i) => {
+      const fig = document.createElement('div');
+      fig.className = 'arc-page';
+      fig.style.aspectRatio = `${pg.w} / ${pg.h}`;
+      const img = document.createElement('img');
+      img.src = new URL(pg.src, base).href;
+      img.alt = `${it.title} — page ${i + 1}`;
+      img.decoding = 'async';
+      img.loading = i < 2 ? 'eager' : 'lazy';
+      img.draggable = false;
+      fig.appendChild(img);
+      col.appendChild(fig);
+      return fig;
+    });
+    wrap.appendChild(col);
+    stage.appendChild(wrap);
+
+    // 'read' is a comfortable measure; 'full' fills the viewport width;
+    // a single large sheet starts whole-page so the drawing reads as one thing
+    let mode = it.single ? 'fit' : 'read';
+    const apply = () => {
+      wrap.dataset.mode = mode;
+      zoomBtn.textContent = mode === 'full' ? (it.single ? 'Fit page' : 'Fit width') : 'Zoom in';
+      zoomBtn.setAttribute('aria-pressed', String(mode === 'full'));
+    };
+    zoomBtn.addEventListener('click', () => {
+      mode = it.single ? (mode === 'fit' ? 'full' : 'fit')
+                       : (mode === 'read' ? 'full' : 'read');
+      apply();
+    });
+    apply();
+
+    // Page counter: whichever page crosses the middle of the reader. Plain
+    // scrollTop arithmetic rather than an IntersectionObserver — one pass over
+    // 44 offsetTop reads, coalesced to a frame, is cheaper than 44 observers
+    // and gives the same answer without threshold tuning.
+    let current = -1, queued = false;
+    const paint = () => {
+      queued = false;
+      const mid = wrap.scrollTop + wrap.clientHeight / 2;
+      let i = 0;
+      while (i + 1 < imgs.length && imgs[i + 1].offsetTop <= mid) i++;
+      if (i === current) return;
+      current = i;
+      count.textContent = `${i + 1} / ${it.pages.length}`;
+    };
+    const onScroll = () => { if (!queued) { queued = true; requestAnimationFrame(paint); } };
+    wrap.addEventListener('scroll', onScroll, { passive: true });
+    const ro = new ResizeObserver(onScroll);
+    ro.observe(wrap);
+    paint();
+
+    return () => { wrap.removeEventListener('scroll', onScroll); ro.disconnect(); };
   }
 
   // ── video ────────────────────────────────────────────────────────────────

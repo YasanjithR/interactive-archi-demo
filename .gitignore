@@ -24,3 +24,7 @@ node_modules/
 # Source PDFs and video as delivered — 363 MB, superseded by content/archive/.
 # Anchored: an unanchored name matches at any depth (see the STEMS note above).
 /content/pdfs/
+
+# Intermediate page manifests from tools/make_pages.sh — their contents are
+# pasted into archive.json and the files are not served.
+/content/archive/pages/*/_pages.json

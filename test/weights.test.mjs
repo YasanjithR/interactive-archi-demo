@@ -117,3 +117,31 @@ test('no panel has two consecutive parts that resolve to the same mix', async ()
     }
   }
 });
+
+test('every archive asset referenced by archive.json exists on disk', async () => {
+  // The archive is read straight off the filesystem at the crit. A page that
+  // 404s leaves a blank sheet in the reader with the right proportions and no
+  // error, which is exactly the failure nobody notices until it is on screen.
+  const { readFileSync, existsSync } = await import('node:fs');
+  const base = new URL('../content/archive/archive.json', import.meta.url);
+  const arc = JSON.parse(readFileSync(base));
+  const has = rel => existsSync(new URL(rel, base));
+
+  for (const it of arc.items) {
+    if (it.cover) assert.ok(has(it.cover), `${it.id}: missing cover ${it.cover}`);
+
+    if (it.kind === 'pages') {
+      assert.ok(it.pages?.length, `${it.id}: kind "pages" with no pages`);
+      assert.ok(has(it.pdf), `${it.id}: missing download ${it.pdf}`);
+      for (const [i, pg] of it.pages.entries()) {
+        assert.ok(has(pg.src), `${it.id}: missing page ${i + 1} (${pg.src})`);
+        assert.ok(pg.w > 0 && pg.h > 0, `${it.id}: page ${i + 1} has no dimensions`);
+      }
+      assert.equal(it.single === true, it.pages.length === 1,
+        `${it.id}: "single" must be set exactly when there is one page`);
+    }
+
+    if (it.kind === 'wall')  for (const b of it.boards)  for (const s of b.segments) assert.ok(has(s.src), `${it.id}: missing segment ${s.src}`);
+    if (it.kind === 'video') for (const s of it.sources) assert.ok(has(s.src), `${it.id}: missing source ${s.src}`);
+  }
+});
