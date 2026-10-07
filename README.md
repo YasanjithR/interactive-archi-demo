@@ -308,18 +308,20 @@ crit laptop decides whether the archive works, which is not a bet worth taking.
 Each document is now rasterised to page JPEGs (`tools/make_pages.sh`) and
 listed in `archive.json` with its pixel size, which goes onto the page wrapper
 as an `aspect-ratio` so the full scroll height is correct before a single image
-has loaded. The first two pages load eagerly, the rest lazily. The original PDF
-is still one click away in the toolbar as a download.
+has loaded. The first two pages load eagerly, the rest lazily.
 
 Two sizes, toggled from the toolbar: a comfortable 62 rem column for reading,
 and full window width for detail. A one-page sheet (the A1 masterplan) starts
 whole-page instead, because a plan read a column at a time is not a plan.
 
-| Document | Pages | Size |
+| Document | Pages | Page images |
 |---|---|---|
 | Research Portfolio | 44 | 6.3 MB |
 | Process Portfolio | 34 | 4.5 MB |
 | Cremorne Masterplan | 1 | 1.6 MB |
+
+The archive cards no longer print a file size. A size tells you how big the
+thing you are about to download is, and nothing here is downloadable.
 
 The page counter is plain `scrollTop` arithmetic against each page's
 `offsetTop`, coalesced to a frame — not an `IntersectionObserver`. Same answer,
@@ -331,8 +333,7 @@ The three Masterclass boards share a height and were made to be pinned side by
 side, so they are not a folder of three PDFs. They are shown as one continuous
 **21,610 × 2,186 px** strip you drag along, with a scrubber marking which board
 you are in front of and a zoom for reading board text. A folder would have lost
-the only thing that makes them a set. The individual PDFs are still one click
-away in the toolbar.
+the only thing that makes them a set.
 
 Each board is sliced into segments no wider than 4,200 px so no single image
 decode exceeds ~10 MP — board 02 alone is 12,348 px wide.
@@ -356,6 +357,26 @@ Totals: the seven source files are **363 MB**, five of them over Cloudflare's
 25 MiB per-asset limit. Processed, `content/archive/` is **68 MB** with nothing
 over 18 MB: 29 MB film (shipped twice), 21 MB download PDFs, 13 MB page images,
 5 MB boards.
+
+### Nothing is downloadable
+
+The archive shows the work; it does not hand it out. There is no download
+button anywhere, the film's native controls are built without one
+(`controlsList="nodownload"`, no picture-in-picture, no cast), right-click on
+an image or the film is suppressed inside the viewer, and dragging a page out
+of the window does nothing.
+
+`archive.json` names no PDF at all. A path left in the manifest is a URL anyone
+can read straight off the wire whether or not a button points at it, so the
+source PDFs are stripped from it *and* excluded from the deploy
+(`/content/archive/docs/` in `.assetsignore`). They stay in the repo for
+re-running `make_pages.sh`; they are simply never uploaded, so there is no URL
+to guess. It also takes 21 MB off the site.
+
+**This is a deterrent, not protection.** Anything the browser renders it has
+already fetched, and the network tab will always hand it over. What it removes
+is every route a visitor would actually take. A test enforces all of it, so a
+download link cannot creep back in unnoticed.
 
 The film ships twice, VP9 first. H.264 is absent from Chromium builds without
 the licensed decoder — the same gap that forced the stems to MP3 — so the

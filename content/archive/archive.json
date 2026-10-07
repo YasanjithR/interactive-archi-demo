@@ -7,7 +7,6 @@
       "title": "Research Portfolio",
       "kind": "pages",
       "meta": "44 pages",
-      "size": "8.3 MB",
       "cover": "covers/research-portfolio.jpg",
       "blurb": "The written research behind Reweave Cremorne — the fast-fashion argument the building is answering.",
       "pages": [
@@ -232,7 +231,6 @@
           "h": 1170
         }
       ],
-      "pdf": "docs/research-portfolio.pdf",
       "single": false
     },
     {
@@ -240,7 +238,6 @@
       "title": "Cremorne Masterplan",
       "kind": "pages",
       "meta": "A1 sheet",
-      "size": "1.8 MB",
       "cover": "covers/cremorne-masterplan.jpg",
       "blurb": "The site at city scale: how the building sits in Cremorne and what it reorganises around it.",
       "pages": [
@@ -250,7 +247,6 @@
           "h": 3643
         }
       ],
-      "pdf": "docs/cremorne-masterplan.pdf",
       "single": true
     },
     {
@@ -258,7 +254,6 @@
       "title": "Process Portfolio",
       "kind": "pages",
       "meta": "34 pages",
-      "size": "6.0 MB",
       "cover": "covers/process-portfolio.jpg",
       "blurb": "Iteration, testing and the dead ends — how the five spaces arrived at their final form.",
       "pages": [
@@ -433,7 +428,6 @@
           "h": 1170
         }
       ],
-      "pdf": "docs/process-portfolio.pdf",
       "single": false
     },
     {
@@ -441,12 +435,10 @@
       "title": "Presentation Boards",
       "kind": "wall",
       "meta": "3 boards · 21,610 px wide",
-      "size": "5.1 MB",
       "cover": "covers/presentation-boards.jpg",
       "boards": [
         {
           "label": "01",
-          "pdf": "docs/board-01.pdf",
           "w": 4631,
           "h": 2186,
           "segments": [
@@ -464,7 +456,6 @@
         },
         {
           "label": "02",
-          "pdf": "docs/board-02.pdf",
           "w": 12348,
           "h": 2186,
           "segments": [
@@ -487,7 +478,6 @@
         },
         {
           "label": "03",
-          "pdf": "docs/board-03.pdf",
           "w": 4631,
           "h": 2186,
           "segments": [
@@ -511,7 +501,6 @@
       "title": "Project Film",
       "kind": "video",
       "meta": "0:56 · 1080p",
-      "size": "16.1 MB",
       "cover": "covers/film.jpg",
       "poster": "film/poster.jpg",
       "blurb": "A short walkthrough of the building and its spaces.",

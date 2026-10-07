@@ -244,13 +244,14 @@ body[data-reader=true] .prof{opacity:.2}
   color:var(--ink-2);background:var(--panel);transition:border-color 150ms,color 150ms;white-space:nowrap}
 .arc-tool:hover{border-color:var(--focus);color:var(--focus)}
 .arc-tool[aria-pressed=true]{border-color:var(--focus);color:var(--focus);background:var(--focus-soft)}
-.arc-tool.quiet{color:var(--muted)}
 .arc-close{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;
   color:var(--muted);padding:.42rem .6rem}
 .arc-close:hover{color:var(--focus)}
 .arc-stage{position:relative;display:grid;grid-template-rows:minmax(0,1fr);min-height:0;background:var(--panel-2)}
 .arc-frame{width:100%;height:100%;border:0;background:var(--panel-2)}
 .arc-video{width:100%;height:100%;object-fit:contain;background:#0b0d10;display:block}
+/* no save-image affordance anywhere in the archive */
+.arc-viewer img,.arc-viewer video{user-select:none;-webkit-user-drag:none;-webkit-touch-callout:none}
 
 /* ══════════════ the wall ══════════════ */
 .arc-stage:has(.wall){grid-template-rows:minmax(0,1fr) auto}

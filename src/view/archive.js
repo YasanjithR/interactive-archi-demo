@@ -33,7 +33,7 @@ export function createArchive(paneRoot, overlayRoot, data, base, { onBusy } = {}
       <span class="arc-meta">
         <span class="arc-title">${it.title}</span>
         <span class="arc-blurb">${it.blurb || ''}</span>
-        <span class="arc-foot"><span>${it.meta}</span><span>${it.size}</span></span>
+        <span class="arc-foot"><span>${it.meta}</span></span>
       </span>`;
     card.addEventListener('click', () => open(it));
     list.appendChild(card);
@@ -55,6 +55,15 @@ export function createArchive(paneRoot, overlayRoot, data, base, { onBusy } = {}
     </header>
     <div class="arc-stage"></div>`;
   overlayRoot.appendChild(ov);
+
+  // Nothing in the archive is offered for download. This is a deterrent, not
+  // protection — anything the browser renders it has already fetched, and the
+  // network tab will always hand it over. It removes the obvious routes:
+  // no save-image context menu, no drag-to-desktop.
+  ov.addEventListener('contextmenu', e => {
+    if (e.target.closest('img, video')) e.preventDefault();
+  });
+  ov.addEventListener('dragstart', e => e.preventDefault());
 
   const barTitle = ov.querySelector('.arc-bar-title');
   const barTools = ov.querySelector('.arc-bar-tools');
@@ -94,12 +103,6 @@ export function createArchive(paneRoot, overlayRoot, data, base, { onBusy } = {}
   // rather than opening them, and iOS Safari frequently refuses to render one
   // in a frame — both give a blank overlay. Page images always render.
   function mountPages(it) {
-    const dl = document.createElement('a');
-    dl.className = 'arc-tool quiet';
-    dl.href = new URL(it.pdf, base).href;
-    dl.download = '';
-    dl.textContent = 'Download PDF';
-
     const zoomBtn = document.createElement('button');
     zoomBtn.type = 'button';
     zoomBtn.className = 'arc-tool';
@@ -107,7 +110,7 @@ export function createArchive(paneRoot, overlayRoot, data, base, { onBusy } = {}
     const count = document.createElement('span');
     count.className = 'arc-count';
 
-    barTools.append(count, zoomBtn, dl);
+    barTools.append(count, zoomBtn);
 
     const wrap = document.createElement('div');
     wrap.className = 'arc-reader';
@@ -176,6 +179,11 @@ export function createArchive(paneRoot, overlayRoot, data, base, { onBusy } = {}
     v.controls = true;
     v.preload = 'metadata';
     v.playsInline = true;
+    // No download item in the native control set, and no picture-in-picture or
+    // cast — both hand the file to something outside the page.
+    v.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback');
+    v.disablePictureInPicture = true;
+    v.setAttribute('disableRemotePlayback', '');
     if (it.poster) v.poster = new URL(it.poster, base).href;
     // Two sources, VP9 first. H.264 is absent from Chromium builds without the
     // licensed decoder — the same gap that forced the stems to MP3 — so the
@@ -199,14 +207,6 @@ export function createArchive(paneRoot, overlayRoot, data, base, { onBusy } = {}
     zoomBtn.type = 'button';
     zoomBtn.className = 'arc-tool';
     barTools.appendChild(zoomBtn);
-    for (const b of it.boards) {
-      const a = document.createElement('a');
-      a.className = 'arc-tool quiet';
-      a.href = new URL(b.pdf, base).href;
-      a.target = '_blank'; a.rel = 'noopener';
-      a.textContent = `PDF ${b.label}`;
-      barTools.appendChild(a);
-    }
 
     const wrap = document.createElement('div');
     wrap.className = 'wall';

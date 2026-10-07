@@ -15,6 +15,11 @@
 /Panels/
 /content/pdfs/
 
+# Nothing in the archive is downloadable, so the source PDFs are not served.
+# They stay in the repo for re-running tools/make_pages.sh; they are simply
+# never uploaded, so there is no URL to guess. Also saves 21 MB.
+/content/archive/docs/
+
 # not needed at runtime
 /.gitignore
 /.assetsignore

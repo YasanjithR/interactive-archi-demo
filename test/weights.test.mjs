@@ -132,7 +132,6 @@ test('every archive asset referenced by archive.json exists on disk', async () =
 
     if (it.kind === 'pages') {
       assert.ok(it.pages?.length, `${it.id}: kind "pages" with no pages`);
-      assert.ok(has(it.pdf), `${it.id}: missing download ${it.pdf}`);
       for (const [i, pg] of it.pages.entries()) {
         assert.ok(has(pg.src), `${it.id}: missing page ${i + 1} (${pg.src})`);
         assert.ok(pg.w > 0 && pg.h > 0, `${it.id}: page ${i + 1} has no dimensions`);
@@ -144,4 +143,25 @@ test('every archive asset referenced by archive.json exists on disk', async () =
     if (it.kind === 'wall')  for (const b of it.boards)  for (const s of b.segments) assert.ok(has(s.src), `${it.id}: missing segment ${s.src}`);
     if (it.kind === 'video') for (const s of it.sources) assert.ok(has(s.src), `${it.id}: missing source ${s.src}`);
   }
+});
+
+test('nothing in the archive is offered for download', async () => {
+  // The work is shown, not handed out. archive.json is served to the browser,
+  // so a path left in it is a URL anyone can read off the wire even with no
+  // button attached to it — the manifest must name no PDF at all, and the
+  // viewer must build no download link or anchor.
+  const { readFileSync } = await import('node:fs');
+  const base = new URL('../content/archive/archive.json', import.meta.url);
+  const raw  = readFileSync(base, 'utf8');
+  assert.ok(!/\.pdf/i.test(raw), 'archive.json still names a PDF');
+
+  const js = readFileSync(new URL('../src/view/archive.js', import.meta.url), 'utf8');
+  const code = js.replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, '');   // comments may say "download"
+  assert.ok(!/\.download\s*=/.test(code),            'viewer sets a download attribute');
+  assert.ok(!/createElement\(['"]a['"]\)/.test(code), 'viewer builds an anchor');
+  assert.ok(/nodownload/.test(code),                  'video controlsList is missing nodownload');
+
+  const ignore = readFileSync(new URL('../.assetsignore', import.meta.url), 'utf8');
+  assert.ok(/^\/content\/archive\/docs\/$/m.test(ignore),
+    'the source PDFs are not excluded from the deploy');
 });
